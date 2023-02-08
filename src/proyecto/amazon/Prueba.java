@@ -9,5 +9,6 @@ package proyecto.amazon;
  * @author carri
  */
 public class Prueba {
+    String cadena;
     
 }
