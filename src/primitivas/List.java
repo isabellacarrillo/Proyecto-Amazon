@@ -40,7 +40,45 @@ public class List { //Class atributes
         return getpFirst() == null;
     }
     
-    // Method to add warehouses 
+    //Append to list from the back
+    public void addToList(Node new_node){
+        if (!this.isEmpty()){
+            this.pLast.setpNext(new_node);
+            this.setpLast(new_node);
+        }else{
+            this.setpFirst(new_node);
+            this.setpLast(new_node);
+        }
+        this.setSize(this.getSize()+1);
+        
+        
+    }
+    
+    
+    //Search for products
+    public Node searchProduct(String id,String name){
+        Node<Products> aux = new Node<>();
+        aux = this.getpFirst();
+        if (!this.isEmpty()){
+            for (int i = 0; i < this.getSize(); i++) {
+                if ((aux.getData().getName().equals(name)) && (aux.getData().getId().equals(id))){
+                    return aux;
+                }
+                aux=aux.getpNext();
+            }
+        }else{
+            return null;
+        }
+        return null;
+    }
+    
+    public void updateProduct(String name,String id, int amount){
+        Node<Products> aux = this.searchProduct(id, name);
+        if (aux!=null){
+            aux.getData().removeProductFromWharehouse(amount);
+        }
+        
+    }
 
     
     
