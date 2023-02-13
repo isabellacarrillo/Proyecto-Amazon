@@ -7,16 +7,24 @@ package primitivas;
 /**
  *
  * @author carri
+ * @param <T>
  */
 public class Node <T>{ //Node class atributes
     
     private T data;
-    private Node <T> pnext;
+    private Node <T> pNext;
     
-    //Constructor 
+    
+    //Constructor knowing nothing
+    public Node(){
+        this.data = null;
+        this.pNext = null;
+    }
+    
+    //Constructor knowing the element 
     public Node(T elem) {
         this.data = elem;
-        this.pnext = null;
+        this.pNext = null;
     }
     
   
@@ -37,18 +45,21 @@ public class Node <T>{ //Node class atributes
     }
 
     /**
-     * @return the pnext
+     * @return the pNext
      */
-    public Node <T> getPnext() {
-        return pnext;
+    public Node <T> getpNext() {
+        return pNext;
     }
 
     /**
-     * @param pnext the pnext to set
+     * @param pNext the pNext to set
      */
-    public void setPnext(Node <T> pnext) {
-        this.pnext = pnext;
+    public void setpNext(Node <T> pNext) {
+        this.pNext = pNext;
     }
+
+
+    
 }
     
 

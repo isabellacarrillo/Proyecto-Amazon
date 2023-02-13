@@ -3,42 +3,44 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package proyecto.amazon;
+package primitivas;
+
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Andres
  */
-public class NodeProducts {
-    
+public class Products {
+
     private String id;
     private String name;
     private int amount;
-    private NodeProducts pNext;
-    
-    
+
     //Empty CONSTRUCTOR
-    public NodeProducts(){
+    public Products() {
         this.id = "";
         this.name = "";
         this.amount = 0;
-        this.pNext = null;    
     }
-    
+
     //Without pNext CONSTRUCTOR
-    public NodeProducts(String id, String name, int amount){
+    public Products(String id, String name, int amount) {
         this.id = id;
         this.name = name;
         this.amount = amount;
-        this.pNext = null;
     }
     
-    //CONSTRUCTOR knowing everything.
-    public NodeProducts(String id, String name, int amount, NodeProducts pNext){
-        this.id = id;
-        this.name = name;
-        this.amount = amount;
-        this.pNext = pNext;
+    //Update an amount of a product
+    public void removeProductFromWharehouse(int amount){
+        if (this.amount - amount >= 0){
+            this.amount-=amount;
+        }else{
+            JOptionPane.showMessageDialog(null, "There is not a sufficient amount of " + this.name + " in this wharehouse to cover the order.");
+            
+            //We need to put something here about Dijkstra´s algorithm (call its function)
+        }
+        
     }
 
     /**
@@ -83,20 +85,4 @@ public class NodeProducts {
         this.amount = amount;
     }
 
-    /**
-     * @return the pNext
-     */
-    public NodeProducts getpNext() {
-        return pNext;
-    }
-
-    /**
-     * @param pNext the pNext to set
-     */
-    public void setpNext(NodeProducts pNext) {
-        this.pNext = pNext;
-    }
-    
-           
-    
 }
