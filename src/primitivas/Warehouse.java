@@ -9,7 +9,7 @@ package primitivas;
  *
  * @author Andres
  */
-public class Wharehouse {
+public class Warehouse {
     private String id;
 
     /**
