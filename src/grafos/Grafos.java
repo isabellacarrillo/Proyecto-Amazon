@@ -4,6 +4,9 @@
  */
 package grafos;
 import primitivas.List;
+import primitivas.Node;
+import primitivas.Warehouse;
+import primitivas.Products;
 
 /**
  *
@@ -26,9 +29,25 @@ public class Grafos {
     }
 
     //This method creates a new Warehouse 
-    public void createWarehouse (List x, String num){
+    public void createWarehouse (String id, List list){
+        Warehouse warehouse = new Warehouse (id,list);
+        if (warehouses.isEmpty()){
+            warehouses.addAtTheStart(warehouse);     
+            
+        }else{
+            warehouses.addAtTheEnd(warehouse);
+        }count ++;
         
     }
+    
+    //This method creates a new product
+    public Products createProduct (String name, int amount){
+        Products product = new Products(name,amount);
+        return product;
+    }
+    
+    
+  
     
     
     

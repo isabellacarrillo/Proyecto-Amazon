@@ -41,44 +41,60 @@ public class List { //Class atributes
     }
     
     //Append to list from the back
-    public void addToList(Node new_node){
-        if (!this.isEmpty()){
-            this.pLast.setpNext(new_node);
-            this.setpLast(new_node);
+     public void addAtTheEnd(Object data){ 
+        Node nuevo = new Node (data);
+        if (this.isEmpty()){
+            this.pFirst= nuevo;
+            this.pLast= nuevo;
         }else{
-            this.setpFirst(new_node);
-            this.setpLast(new_node);
-        }
-        this.setSize(this.getSize()+1);
-        
-        
+            Node aux = this.pLast;
+            aux.setpNext(nuevo);
+            this.pLast = nuevo;
+        }this.size+=1;
     }
     
-    
-    //Search for products
-    public Node searchProduct(String id,String name){
-        Node<Products> aux = new Node<>();
-        aux = this.getpFirst();
-        if (!this.isEmpty()){
-            for (int i = 0; i < this.getSize(); i++) {
-                if ((aux.getData().getName().equals(name)) && (aux.getData().getId().equals(id))){
-                    return aux;
-                }
-                aux=aux.getpNext();
-            }
+    // Method that adds to a list at the start of it
+     public void addAtTheStart (Object data){
+        Node nuevo = new Node(data);
+        nuevo.setData(data);
+        
+        if (isEmpty()){
+            this.pFirst = nuevo;
         }else{
-            return null;
-        }
-        return null;
+            nuevo.setpNext(this.pFirst);
+            this.pFirst = nuevo;
+        }this.size += 1;
     }
+     
     
-    public void updateProduct(String name,String id, int amount){
-        Node<Products> aux = this.searchProduct(id, name);
-        if (aux!=null){
-            aux.getData().removeProductFromWharehouse(amount);
-        }
-        
-    }
+    
+    
+    
+    
+//    //Search for products
+//    public Node searchProduct(String id,String name){
+//        Node<Products> aux = new Node<>();
+//        aux = this.getpFirst();
+//        if (!this.isEmpty()){
+//            for (int i = 0; i < this.getSize(); i++) {
+//                if ((aux.getData().getName().equals(name)) && (aux.getData().getId().equals(id))){
+//                    return aux;
+//                }
+//                aux=aux.getpNext();
+//            }
+//        }else{
+//            return null;
+//        }
+//        return null;
+//    }
+    
+//    public void updateProduct(String name,String id, int amount){
+//        Node<Products> aux = this.searchProduct(id, name);
+//        if (aux!=null){
+//            aux.getData().removeProductFromWharehouse(amount);
+//        }
+//        
+//    }
 
     
     

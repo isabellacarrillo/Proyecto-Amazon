@@ -9,8 +9,26 @@ package primitivas;
  *
  * @author Andres
  */
+
+
 public class Warehouse {
     private String id;
+    private List products;
+
+    public Warehouse() {
+    }
+    
+    
+    
+    public Warehouse(String id, List products) {
+        this.id = id;
+        this.products = products;
+    }
+    
+    public Warehouse(String id) {
+        this.id = id;
+    }
+    
 
     /**
      * @return the id
@@ -25,5 +43,21 @@ public class Warehouse {
     public void setId(String id) {
         this.id = id;
     }
+
+    /**
+     * @return the products
+     */
+    public List getProducts() {
+        return products;
+    }
+
+    /**
+     * @param products the products to set
+     */
+    public void setProducts(List products) {
+        this.products = products;
+    }
+
+
     
 }
