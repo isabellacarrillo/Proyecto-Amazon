@@ -13,20 +13,19 @@ import javax.swing.JOptionPane;
  */
 public class Products {
 
-    private String id;
     private String name;
     private int amount;
 
     //Empty CONSTRUCTOR
     public Products() {
-        this.id = "";
+
+        
         this.name = "";
         this.amount = 0;
     }
 
-    //Without pNext CONSTRUCTOR
-    public Products(String id, String name, int amount) {
-        this.id = id;
+
+    public Products( String name, int amount) {
         this.name = name;
         this.amount = amount;
     }
@@ -43,19 +42,6 @@ public class Products {
         
     }
 
-    /**
-     * @return the id
-     */
-    public String getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(String id) {
-        this.id = id;
-    }
 
     /**
      * @return the name

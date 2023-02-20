@@ -55,30 +55,30 @@ public class List { //Class atributes
     }
     
     
-    //Search for products
-    public Node searchProduct(String id,String name){
-        Node<Products> aux = new Node<>();
-        aux = this.getpFirst();
-        if (!this.isEmpty()){
-            for (int i = 0; i < this.getSize(); i++) {
-                if ((aux.getData().getName().equals(name)) && (aux.getData().getId().equals(id))){
-                    return aux;
-                }
-                aux=aux.getpNext();
-            }
-        }else{
-            return null;
-        }
-        return null;
-    }
+//    //Search for products
+//    public Node searchProduct(String id,String name){
+//        Node<Products> aux = new Node<>();
+//        aux = this.getpFirst();
+//        if (!this.isEmpty()){
+//            for (int i = 0; i < this.getSize(); i++) {
+//                if ((aux.getData().getName().equals(name)) && (aux.getData().getId().equals(id))){
+//                    return aux;
+//                }
+//                aux=aux.getpNext();
+//            }
+//        }else{
+//            return null;
+//        }
+//        return null;
+//    }
     
-    public void updateProduct(String name,String id, int amount){
-        Node<Products> aux = this.searchProduct(id, name);
-        if (aux!=null){
-            aux.getData().removeProductFromWharehouse(amount);
-        }
-        
-    }
+//    public void updateProduct(String name,String id, int amount){
+//        Node<Products> aux = this.searchProduct(id, name);
+//        if (aux!=null){
+//            aux.getData().removeProductFromWharehouse(amount);
+//        }
+//        
+//    }
 
     
     
