@@ -71,6 +71,10 @@ public class GrafoMA {
         return gIn;
     }
     
+    public int incidencia(int i){
+        return gradoIn(i);
+    }
+    
     // Método que devuelve el grado de salida del vértice i 
     public int gradoOut(int i){
         int gOut = 0;
