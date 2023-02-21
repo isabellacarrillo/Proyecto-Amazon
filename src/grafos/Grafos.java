@@ -66,7 +66,9 @@ public class Grafos {
     
     // DFS algorithm, returns lists of all graphs warehouses
     
-    
+    // Depth First Search algorithm is used for searching a graph
+    // starts at the top and goes as far down as it can on a given branch 
+    //and then backtracks to find unexplored paths, and explores them.
   public List getWarehouseDFS (){
       
       Node node = getFirstNode();
@@ -114,6 +116,9 @@ public class Grafos {
   }
   
   // BFS algorithm, returns lists of all graph warehouses
+  //Breadth First Search Algorithm is used for searching a graph
+  //Begins at the rooot and investigates all nodes at current depth level before moving on to nodes
+  //at next depth level. 
   public List getWarehouseBFS (){
       Node node = getFirstNode();
       List nodosrecorridos = new List();
@@ -153,6 +158,8 @@ public class Grafos {
   }
     
     
+  
+  
     
     
     //Getters y Setters

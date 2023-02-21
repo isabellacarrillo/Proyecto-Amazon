@@ -23,8 +23,8 @@ public class MatrizAdy {
    
     
     //This method serves to add a new edge in the graph
-    public void addAnEdge (int from, int to, int cost){
-        matrix[from][to] = cost;
+    public void addAnEdge (int from, int to, int weight){
+        matrix[from][to] = weight;
     }
     
     //Method to print graphs
