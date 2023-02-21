@@ -15,13 +15,13 @@ import primitivas.Products;
 public class Grafos {
     private MatrizAdy matrixady;
     private List warehouses;
-    private int count;
+    private int size;
 
     //Constructor
     public Grafos(MatrizAdy matrixady) {
         this.matrixady = matrixady;
         this.warehouses = null;
-        this.count = 0;
+        this.size = 0;
     }
     
     //Empty Constructor
@@ -36,7 +36,7 @@ public class Grafos {
             
         }else{
             warehouses.addAtTheEnd(warehouse);
-        }count ++;
+        }size ++;
         
     }
     
@@ -196,14 +196,14 @@ public class Grafos {
      * @return the count
      */
     public int getCount() {
-        return count;
+        return size;
     }
 
     /**
      * @param count the count to set
      */
     public void setCount(int count) {
-        this.count = count;
+        this.size = count;
     }
     
     
