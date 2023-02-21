@@ -75,7 +75,7 @@ public class Grafos {
       List nodosrecorridos = new List();
       List indexrecorridos = new List();
       
-      int [][] matrixady = getMatrixAdy().getMatrix(); 
+      int [][] matrizadya = getMatrixAdy().getMatrix(); 
       boolean allnodesrecorridos = false;
       int stepsback = 0;
       
@@ -86,8 +86,8 @@ public class Grafos {
               nodosrecorridos.addAtTheEnd(node.getData());
               indexrecorridos.addAtTheStart(index);
           }
-          for (int i = 0; i < matrixady[index].length; i++) {
-              int ruta = matrixady [index][i];
+          for (int i = 0; i < matrizadya[index].length; i++) {
+              int ruta = matrizadya [index][i];
               if (ruta != 0){
                   if(!indexrecorridos.searchList(i)){  
                       node = getWarehouses().getWarehouseNodebyIndex(i);
