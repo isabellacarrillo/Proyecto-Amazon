@@ -195,14 +195,14 @@ public class Grafos {
     /**
      * @return the count
      */
-    public int getCount() {
+    public int getSize() {
         return size;
     }
 
     /**
      * @param count the count to set
      */
-    public void setCount(int count) {
+    public void setSize(int count) {
         this.size = count;
     }
     

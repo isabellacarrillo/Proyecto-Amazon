@@ -36,14 +36,17 @@ public class Functions {
 
     }
 
-    List warehouseList = new List();
-    List products = new List();
-    String line = "";
-    String txt = "";
-    String path = "test\\amazon.txt";
-    File file = new File(path);
 
-    public void read_txt() {
+    public Grafos read_txt() {
+        
+        List warehouseList = new List();
+        List products = new List();
+        String line = "";
+        String txt = "";
+        String path = "test\\amazon.txt";
+        File file = new File(path);
+        Grafos grafo = new Grafos();
+        
         try {
             if (!file.exists()) {
                 file.createNewFile();
@@ -101,16 +104,22 @@ public class Functions {
 
                                     matrix.addAnEdge(origin, destiny, weight);
                                 }
+                                grafo.setSize(warehouseList.getSize());
+                                grafo.setMatrix(matrix);
+                                grafo.setWarehouses(warehouseList);
 
                             }
                         }
                     }
                 }
+                
                 br.close();
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Ocurrio un error leyendo el archivo: " + e);
+     
         }
+        return grafo;
     }
 
 }

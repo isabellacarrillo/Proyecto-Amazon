@@ -14,7 +14,6 @@ Mouse,2;
 Almacen E:
 Microfono,7
 Audifonos,10;
-
 Rutas;
 A,B,10
 A,C,20
