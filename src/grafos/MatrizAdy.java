@@ -20,7 +20,7 @@ public class MatrizAdy {
         
     }
     
-    //Getters y Setters
+   
     
     //This method serves to add a new edge in the graph
     public void addAnEdge (int from, int to, int cost){
@@ -39,28 +39,10 @@ public class MatrizAdy {
         }
     }
     
-    //Method to get the Edges of the Graph
+     
     
-    public void getanEdge(){
-       int origin = 0;
-       int destination  = 1;
-       int cost = 1;
-       
-        for (int i = 0; i < this.getNumVertex(); i++) {
-            addAnEdge(origin,destination,cost);
-            origin ++;
-            if (origin == (getNumVertex()-1)){
-                destination = 0;
-            }else{
-                destination ++;
-            
-            }
-            cost += 2;
-           
-            
-        }
-    }    
     
+    //Getters y Setters
 
     /**
      * @return the numVertex

@@ -13,13 +13,13 @@ import primitivas.Products;
  * @author carri
  */
 public class Grafos {
-    private MatrizAdy matrix;
+    private MatrizAdy matrixady;
     private List warehouses;
     private int count;
 
     //Constructor
-    public Grafos(MatrizAdy matrix) {
-        this.matrix = matrix;
+    public Grafos(MatrizAdy matrixady) {
+        this.matrixady = matrixady;
         this.warehouses = null;
         this.count = 0;
     }
@@ -64,30 +64,30 @@ public class Grafos {
     
   
     
-    // DFS algorithm, returns lists of all graphs storages
+    // DFS algorithm, returns lists of all graphs warehouses
     
     
   public List getWarehouseDFS (){
       
       Node node = getFirstNode();
-      List traveledNodes = new List();
-      List traveledIndexes = new List();
+      List nodosrecorridos = new List();
+      List indexrecorridos = new List();
       
-      int [][] matrixady = getMatrix().getMatrix();
-      boolean traveledAllNodes = false;
+      int [][] matrixady = getMatrixAdy().getMatrix(); 
+      boolean allnodesrecorridos = false;
       int stepsback = 0;
       
-      while (!traveledAllNodes){
+      while (!allnodesrecorridos){
           int index = getIndexofNode(node);
           boolean route = false;
-          if(!traveledNodes.searchList(node.getData())){
-              traveledNodes.addAtTheEnd(node.getData());
-              traveledIndexes.addAtTheStart(index);
+          if(!nodosrecorridos.searchList(node.getData())){
+              nodosrecorridos.addAtTheEnd(node.getData());
+              indexrecorridos.addAtTheStart(index);
           }
           for (int i = 0; i < matrixady[index].length; i++) {
               int ruta = matrixady [index][i];
               if (ruta != 0){
-                  if(!traveledIndexes.searchList(i)){
+                  if(!indexrecorridos.searchList(i)){  
                       node = getWarehouses().getWarehouseNodebyIndex(i);
                       route = true;
                       stepsback = 0;
@@ -98,57 +98,58 @@ public class Grafos {
               }
               
           }
-          if (traveledNodes.getSize() == getWarehouses().getSize()){
-              traveledAllNodes = true;
+          if (nodosrecorridos.getSize() == getWarehouses().getSize()){
+              allnodesrecorridos = true;
           }
           if (!route){
               stepsback ++;
-              int newindex = (int) traveledIndexes.ElementIndex(stepsback);
+              int newindex = (int) indexrecorridos.ElementIndex(stepsback);
               node = getWarehouses().getWarehouseNodebyIndex(index);
           }
           
           
       }
       
-    return traveledNodes;
+    return nodosrecorridos;
   }
   
+  // BFS algorithm, returns lists of all graph warehouses
   public List getWarehouseBFS (){
       Node node = getFirstNode();
-      List traveledNodes = new List();
+      List nodosrecorridos = new List();
       List checkindex = new List();
       
-      int[][] matrixady = getMatrix().getMatrix();
-      boolean traveledAllNodes = false;
+      int[][] matrizadya = getMatrixAdy().getMatrix();
+      boolean allnodesrecorridos = false;
       
-      traveledNodes.addAtTheEnd(node.getData());
+      nodosrecorridos.addAtTheEnd(node.getData());
       checkindex.addAtTheEnd(getIndexofNode(node));
       
-      while(!traveledAllNodes){
+      while(!allnodesrecorridos){
           node = getWarehouses().getWarehouseNodebyIndex((int)(checkindex.getpFirst().getData()));
           checkindex.deleteAtTheStart();
           int index = getIndexofNode (node);
           
-          for (int i = 0; i < matrixady[index].length; i++) {
-              int ruta = matrixady [index][i];
+          for (int i = 0; i < matrizadya[index].length; i++) {
+              int ruta = matrizadya [index][i];
               if (ruta != 0){
                   Object check = getWarehouses().getWarehouseNodebyIndex(i).getData();
-                  if (!traveledNodes.searchList(check)){
-                      traveledNodes.addAtTheEnd(getWarehouses().getWarehouseNodebyIndex(i).getData());
+                  if (!nodosrecorridos.searchList(check)){
+                      nodosrecorridos.addAtTheEnd(getWarehouses().getWarehouseNodebyIndex(i).getData());
                       checkindex.addAtTheEnd(i);
                   }
                   
               }
               
           }
-          if (traveledNodes.getSize() == getWarehouses().getSize()){
-              traveledAllNodes = true;
+          if (nodosrecorridos.getSize() == getWarehouses().getSize()){
+              allnodesrecorridos = true;
           }
           
           
       }
-      getMatrix().printMatrix();
-      return traveledNodes;
+      getMatrixAdy().printMatrix();
+      return nodosrecorridos;
   }
     
     
@@ -159,15 +160,15 @@ public class Grafos {
     /**
      * @return the matrix
      */
-    public MatrizAdy getMatrix() {
-        return matrix;
+    public MatrizAdy getMatrixAdy() {
+        return matrixady;
     }
 
     /**
      * @param matrix the matrix to set
      */
     public void setMatrix(MatrizAdy matrix) {
-        this.matrix = matrix;
+        this.matrixady = matrix;
     }
 
     /**

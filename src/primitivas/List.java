@@ -66,7 +66,7 @@ public class List { //Class atributes
         }this.size += 1;
     }
      
-    
+    //Method that searches a list
      public boolean searchList (Object elem){
          Node aux = getpFirst();
          boolean found = false;
@@ -79,6 +79,17 @@ public class List { //Class atributes
              aux = aux.getpNext();
          }
          return found;
+     }
+     
+     
+      //Method to delete element at the start of the list 
+     public void deleteAtTheStart(){
+         if(!isEmpty()){
+             Node aux = getpFirst();
+             setpFirst(aux.getpNext());
+             aux.setpNext(null);
+             this.size --;
+         }
      }
     
      //Method that returns the warehouse node with its index
@@ -108,15 +119,7 @@ public class List { //Class atributes
          }
      }
      
-     //Method to delete element at the start of the list 
-     public void deleteAtTheStart(){
-         if(!isEmpty()){
-             Node aux = getpFirst();
-             setpFirst(aux.getpNext());
-             aux.setpNext(null);
-             this.size --;
-         }
-     }
+    
     
     
     
