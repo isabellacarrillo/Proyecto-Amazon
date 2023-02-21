@@ -30,6 +30,16 @@ public class Warehouse {
     }
     
 
+    //Print warehouse with products
+    public String printWarehouse(){
+        String texto = "\nAlamcen: "+ this.getId();
+        Node<Products> aux = this.getProducts().getpFirst();
+        for (int i = 0; i < this.getProducts().getSize(); i++) {
+            texto += aux.getData().printProduct();
+        }
+        return texto;
+    }
+    
     /**
      * @return the id
      */

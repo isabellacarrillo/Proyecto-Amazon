@@ -30,6 +30,12 @@ public class Products {
         this.amount = amount;
     }
     
+    
+    //Print a product
+    public String printProduct(){
+        return ("\nProducto: "+this.getName()+"\nCantidad: "+ String.valueOf(this.getAmount()));
+    }
+    
     //Update an amount of a product
     public void removeProductFromWarehouse(int amount){
         if (this.amount - amount >= 0){

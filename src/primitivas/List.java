@@ -47,8 +47,7 @@ public class List { //Class atributes
             this.pFirst= nuevo;
             this.pLast= nuevo;
         }else{
-            Node aux = this.pLast;
-            aux.setpNext(nuevo);
+            this.getpLast().setpNext(nuevo);
             this.pLast = nuevo;
         }this.size+=1;
     }
@@ -88,7 +87,7 @@ public class List { //Class atributes
              Node aux = getpFirst();
              setpFirst(aux.getpNext());
              aux.setpNext(null);
-             this.size --;
+             this.setSize(this.getSize()-1);
          }
      }
     
