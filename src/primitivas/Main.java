@@ -24,7 +24,7 @@ public class Main {
             aux = aux.getpNext();
         }
         System.out.println(texto);
-        
+        f.write_txt(grafo);
         
     }
     

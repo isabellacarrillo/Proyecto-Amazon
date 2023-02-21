@@ -23,29 +23,31 @@ public class Functions {
     public void write_txt(Grafos grafo) {
         String texto = "";
         try {
-            PrintWriter pw = new PrintWriter("test\\amazon_txt");
-            texto += "Almacenes;\n";
+            PrintWriter pw = new PrintWriter("test\\amazon.txt");
+            texto += "Almacenes;";
             Node<Warehouse> auxW = grafo.getWarehouses().getpFirst();
             for (int i = 0; i < grafo.getWarehouses().getSize(); i++) {
-                texto += "Almacen " + auxW.getData().getId() + ":\n";
+                texto += "\n" + "Almacen " + auxW.getData().getId() + ":";
                 Node<Products> auxP = auxW.getData().getProducts().getpFirst();
                 for (int j = 0; j < auxW.getData().getProducts().getSize(); j++) {
-                    texto += auxP.getData().getName() + String.valueOf(auxP.getData().getAmount()) + "\n";
+                    texto += "\n" + auxP.getData().getName() + "," + String.valueOf(auxP.getData().getAmount());
+                    auxP = auxP.getpNext();
                 }
                 auxW = auxW.getpNext();
             }
-            texto += "Rutas;\n";
+            texto += "\nRutas;";
             for (int i = 0; i < grafo.getMatrixAdy().getNumVertex(); i++) {
                 for (int j = 0; j < grafo.getMatrixAdy().getMatrix()[i].length; j++) {
                     if (grafo.getMatrixAdy().getMatrix()[i][j] != 0) {
                         char almacenCOrigin = (char) (i + 65);
                         char almacenCDestination = (char) (j + 65);
                         int weight = grafo.getMatrixAdy().getMatrix()[i][j];
-                        texto += String.valueOf(almacenCOrigin) + String.valueOf(almacenCDestination) + String.valueOf(weight) + "\n";
+                        texto += "\n" + String.valueOf(almacenCOrigin) + "," + String.valueOf(almacenCDestination) + "," + String.valueOf(weight) ;
                     }
                 }
             }
             pw.write(texto);
+            pw.close();
 
             JOptionPane.showMessageDialog(null, "Info succesfully loaded!");
 
