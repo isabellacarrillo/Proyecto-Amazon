@@ -67,7 +67,56 @@ public class List { //Class atributes
     }
      
     
+     public boolean searchList (Object elem){
+         Node aux = getpFirst();
+         boolean found = false;
+         
+         while (aux!= null){
+             if (aux.getData().equals(elem)){
+                 found = true;
+                 break;
+             }
+             aux = aux.getpNext();
+         }
+         return found;
+     }
     
+     //Method that returns the warehouse node with its index
+     public Node getWarehouseNodebyIndex (int index){
+         Node aux = getpFirst();
+         for (int i = 0; i < index; i++) {
+             aux = aux.getpNext();
+             
+         }
+         return aux;
+     }
+     
+     //Method that will return the element in the index that is specified
+     public Object ElementIndex(int position){
+         if(!isEmpty()){
+             Node aux = getpFirst();
+             for (int i = 0; i < position; i++) {
+                 if (aux.getpNext() == null){
+                     break;
+                 }
+                 aux = aux.getpNext();
+                 
+             }
+             return aux.getData();
+         }else{
+             return null;
+         }
+     }
+     
+     //Method to delete element at the start of the list 
+     public void deleteAtTheStart(){
+         if(!isEmpty()){
+             Node aux = getpFirst();
+             setpFirst(aux.getpNext());
+             aux.setpNext(null);
+             this.size --;
+         }
+     }
     
     
     

@@ -46,8 +46,110 @@ public class Grafos {
         return product;
     }
     
+    //Method that gets the first node of a graph
+    public Node getFirstNode(){
+        return getWarehouses().getpFirst();
+    }
+    
+    //Method that returns the index number of a given node
+    public int getIndexofNode(Node node){
+        Node pointer = getWarehouses().getpFirst();
+        int cont = 0;
+        while (pointer != node){
+            pointer = pointer.getpNext();
+            cont ++;
+        }
+        return cont;
+    }
     
   
+    
+    // DFS algorithm, returns lists of all graphs storages
+    
+    
+  public List getWarehouseDFS (){
+      
+      Node node = getFirstNode();
+      List traveledNodes = new List();
+      List traveledIndexes = new List();
+      
+      int [][] matrixady = getMatrix().getMatrix();
+      boolean traveledAllNodes = false;
+      int stepsback = 0;
+      
+      while (!traveledAllNodes){
+          int index = getIndexofNode(node);
+          boolean route = false;
+          if(!traveledNodes.searchList(node.getData())){
+              traveledNodes.addAtTheEnd(node.getData());
+              traveledIndexes.addAtTheStart(index);
+          }
+          for (int i = 0; i < matrixady[index].length; i++) {
+              int ruta = matrixady [index][i];
+              if (ruta != 0){
+                  if(!traveledIndexes.searchList(i)){
+                      node = getWarehouses().getWarehouseNodebyIndex(i);
+                      route = true;
+                      stepsback = 0;
+                      break;
+                      
+                      
+                  }
+              }
+              
+          }
+          if (traveledNodes.getSize() == getWarehouses().getSize()){
+              traveledAllNodes = true;
+          }
+          if (!route){
+              stepsback ++;
+              int newindex = (int) traveledIndexes.ElementIndex(stepsback);
+              node = getWarehouses().getWarehouseNodebyIndex(index);
+          }
+          
+          
+      }
+      
+    return traveledNodes;
+  }
+  
+  public List getWarehouseBFS (){
+      Node node = getFirstNode();
+      List traveledNodes = new List();
+      List checkindex = new List();
+      
+      int[][] matrixady = getMatrix().getMatrix();
+      boolean traveledAllNodes = false;
+      
+      traveledNodes.addAtTheEnd(node.getData());
+      checkindex.addAtTheEnd(getIndexofNode(node));
+      
+      while(!traveledAllNodes){
+          node = getWarehouses().getWarehouseNodebyIndex((int)(checkindex.getpFirst().getData()));
+          checkindex.deleteAtTheStart();
+          int index = getIndexofNode (node);
+          
+          for (int i = 0; i < matrixady[index].length; i++) {
+              int ruta = matrixady [index][i];
+              if (ruta != 0){
+                  Object check = getWarehouses().getWarehouseNodebyIndex(i).getData();
+                  if (!traveledNodes.searchList(check)){
+                      traveledNodes.addAtTheEnd(getWarehouses().getWarehouseNodebyIndex(i).getData());
+                      checkindex.addAtTheEnd(i);
+                  }
+                  
+              }
+              
+          }
+          if (traveledNodes.getSize() == getWarehouses().getSize()){
+              traveledAllNodes = true;
+          }
+          
+          
+      }
+      getMatrix().printMatrix();
+      return traveledNodes;
+  }
     
     
     
