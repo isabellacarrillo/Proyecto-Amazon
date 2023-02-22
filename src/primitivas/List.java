@@ -90,6 +90,14 @@ public class List { //Class atributes
              this.setSize(this.getSize()-1);
          }
      }
+     
+     // Delete specific element
+     
+     public void deleteSpecific(Object elem){
+         if(!isEmpty()){
+             Node aux = getpFirst();
+         }
+     }
     
      //Method that returns the warehouse node with its index
      public Node getWarehouseNodebyIndex (int index){
