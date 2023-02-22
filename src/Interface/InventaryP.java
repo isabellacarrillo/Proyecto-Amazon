@@ -1,14 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package Interface;
 
-/**
- *
- * @author isaac
- */
+package Interface;
 public class InventaryP extends javax.swing.JFrame {
 
     /**
