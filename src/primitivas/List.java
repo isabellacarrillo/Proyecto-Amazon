@@ -109,6 +109,24 @@ public class List { //Class atributes
          return aux;
      }
      
+     // Method that returns the list index of a warehouse 
+     public int warehouseIndex(String name){
+         Node <Warehouse> aux = getpFirst();
+         int index = -1;
+         
+         for (int i = 0; i < getSize(); i++) {
+             if(aux.getData().getId().equals(name)){
+                 index = i;
+                 break;
+             }
+             aux = aux.getpNext();
+             
+         }
+         return index;
+     }
+             
+     
+     
      //Method that will return the element in the index that is specified
      public Object ElementIndex(int position){
          if(!isEmpty()){
@@ -136,6 +154,24 @@ public class List { //Class atributes
              
          }
          return array;
+     }
+     
+     // method that will get the product in index
+     
+     public Products ProductinIndex (int position){
+         if(!isEmpty()){
+             Node <Products> aux = getpFirst();
+             for (int i = 0; i < position; i++) {
+                 if(aux.getpNext()== null){
+                     break;
+                 }
+                 aux = aux.getpNext();
+                 
+             }
+             return aux.getData();
+         }else{
+             return null;
+         }
      }
      
       
@@ -186,6 +222,7 @@ public class List { //Class atributes
      }
      
      
+  
     
     
     

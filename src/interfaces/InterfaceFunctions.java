@@ -48,7 +48,7 @@ public class InterfaceFunctions {
         Code.getNewOrderPage().getInvTextField().setText(buildStringTotalInv(warehousesO));
 
         for (String item : warehousesName) {
-            if (warehouses.getWarehouse(item).getProducts()!= null) {
+            if (warehouses.searchWarehouse(item).getProducts()!= null) {
                 Code.getNewOrderPage().getStorageComboBox().removeItem(item);
                 Code.getNewOrderPage().getStorageComboBox().addItem(item);
             }
@@ -61,12 +61,12 @@ public class InterfaceFunctions {
      *
      * @param storageName
      */
-    public static void setAvailableProducts(String storageName ) {
+    public static void setAvailableProducts(String Name ) {
         Code.getNewOrderPage().getProductComboBox().removeAllItems();
 
         Grafos graph = Code.getGraph();
-        Warehouse selectedWarehouse = graph.getWarehouses().getWarehouse(storageName);
-        String[] productsNames = selectedWarehouse.getProducts().getInvStringArray();
+        Warehouse selectedWarehouse = graph.getWarehouses().searchWarehouse(Name);
+        String[] productsNames = selectedWarehouse.getProducts().productsArray();
 
         for (String item : productsNames) {
             Code.getNewOrderPage().getProductComboBox().addItem(item);
@@ -122,12 +122,12 @@ public class InterfaceFunctions {
             String productName = productAux[0];
 
             int productQty = Integer.parseInt(productAux[1].replace(" ", ""));
-            int currentStock = selectedStorage.getProducts().getProductByName(productName).getQuantity();
+            int currentStock = selectedStorage.getProducts().searchProducts(productName).getAmount();
 
             if (currentStock < productQty) {
                 isStockAvailable = false;
-                Products missingProduct = new Products((productQty - currentStock), productName);
-                missingStock.addEnd(missingProduct);
+                Products missingProduct = new Products(productName,(productQty - currentStock));
+                missingStock.addAtTheEnd(missingProduct);
             }
 
         }
@@ -137,8 +137,8 @@ public class InterfaceFunctions {
                 String[] productAux = productString.split(":");
                 String productName = productAux[0];
                 int productQty = Integer.parseInt(productAux[1].replace(" ", ""));
-                int originalQty = selectedStorage.getInventory().getProductByName(productName).getQuantity();
-                selectedStorage.getInventory().getProductByName(productName).setQuantity(originalQty - productQty);
+                int originalQty = selectedStorage.getProducts().searchProducts(productName).getAmount();
+                selectedStorage.getProducts().searchProducts(productName).setAmount(originalQty - productQty);
 
             }
 
@@ -160,16 +160,16 @@ public class InterfaceFunctions {
      * @param missingStock
      * @param selectedStorage
      */
-    public static void changeOriginalStorageInv(String[] orderSplit, ListInv missingStock, Storage selectedStorage) {
+    public static void changeOriginalStorageInv(String[] orderSplit, List missingStock, Warehouse selectedStorage) {
         for (String orderString : orderSplit) {
             String productName = orderString.split(":")[0];
 
-            if (missingStock.getProductByName(productName) != null) {
-                selectedStorage.getInventory().getProductByName(productName).setQuantity(0);
+            if (missingStock.searchProducts(productName) != null) {
+                selectedStorage.getProducts().searchProducts(productName).setAmount(0);
             } else {
                 int qtyToReduce = Integer.parseInt(orderString.split(":")[1].replace(" ", ""));
-                Product productToReduce = selectedStorage.getInventory().getProductByName(productName);
-                productToReduce.setQuantity(productToReduce.getQuantity() - qtyToReduce);
+                Products productToReduce = selectedStorage.getProducts().searchProducts(productName);
+                productToReduce.setAmount(productToReduce.getAmount() - qtyToReduce);
             }
         }
     }
@@ -184,24 +184,24 @@ public class InterfaceFunctions {
      * @param orderSplit
      * @param selectedStorage
      */
-    public static void askStockInOtherStorage(ListInv missingStock, String originalStorage, String[] orderSplit, Storage selectedStorage) {
-        ListStorage storageWithStock = new ListStorage();
-        ListStorage allStorages = Code.getGraph().getStorageList();
+    public static void askStockInOtherStorage(List missingStock, String originalStorage, String[] orderSplit, Warehouse selectedStorage) {
+        List storageWithStock = new List();
+        List allWarehouses = Code.getGraph().getWarehouses();
 
         // get storages that can provide the stock
-        for (int i = 0; i < allStorages.getLength(); i++) {
+        for (int i = 0; i < allWarehouses.getSize(); i++) {
 
-            if (!allStorages.getStorageNodeByIndex(i).getStorage().getName().equals(originalStorage)) {
+            if (!allWarehouses.getWarehouseNodebyIndex(i).getData().getId().equals(originalStorage)) {
                 boolean isStockAvailable = true;
-                ListInv currentInv = allStorages.getStorageNodeByIndex(i).getStorage().getInventory();
+                List currentInv = allWarehouses.getWarehouseNodebyIndex(i).getData().getProducts();
 
-                for (int j = 0; j < missingStock.getLength(); j++) {
-                    Product currentMissingProduct = missingStock.getElementInIndex(j);
-                    Product productInStorage = currentInv.getProductByName(currentMissingProduct.getName());
+                for (int j = 0; j < missingStock.getSize(); j++) {
+                    Products currentMissingProduct = missingStock.ProductinIndex(j);
+                    Products productInStorage = currentInv.searchProducts(currentMissingProduct.getName());
                     if (productInStorage == null) {
                         isStockAvailable = false;
                         break;
-                    } else if (productInStorage.getQuantity() < currentMissingProduct.getQuantity()) {
+                    } else if (productInStorage.getAmount() < currentMissingProduct.getAmount()) {
                         isStockAvailable = false;
                         break;
                     }
@@ -209,13 +209,13 @@ public class InterfaceFunctions {
                 }
 
                 if (isStockAvailable) {
-                    storageWithStock.addEnd(allStorages.getStorageNodeByIndex(i).getStorage());
+                    storageWithStock.addAtTheEnd(allWarehouses.getWarehouseNodebyIndex(i).getData());
                 }
             }
 
         }
 
-        if (storageWithStock.getLength() <= 0) {
+        if (storageWithStock.getSize() <= 0) {
             JOptionPane.showMessageDialog(null, "Alerta no existe la cantidad de stock especificada en ninguno de los almacenes de la red");
             initNewOrderPage();
             resetOrder();
@@ -225,14 +225,14 @@ public class InterfaceFunctions {
 
             String shortestRoute = getShortestRoute(storageWithStock, originalStorage);
             String[] shortestRouteSplit = shortestRoute.split(";");
-            Storage storageToGiveProducts = allStorages.getStorageByName(shortestRouteSplit[1].split(",")[0]);
+            Storage storageToGiveProducts = allWarehouses.searchWarehouse(shortestRouteSplit[1].split(",")[0]);
             String userReport = "El pedido tiene los siguientes productos faltantes de stock:\n";
 
-            for (int i = 0; i < missingStock.getLength(); i++) {
-                Product productToReduce = storageToGiveProducts.getInventory().getProductByName(missingStock.getElementInIndex(i).getName());
-                productToReduce.setQuantity(productToReduce.getQuantity() - missingStock.getElementInIndex(i).getQuantity());
+            for (int i = 0; i < missingStock.getSize(); i++) {
+                Products productToReduce = storageToGiveProducts.getProducts().searchProducts(missingStock.ProductinIndex(i).getName());
+                productToReduce.setAmount(productToReduce.getAmount() - missingStock.ProductinIndex(i).getAmount());
 
-                userReport += "- " + missingStock.getElementInIndex(i).getName() + ": " + missingStock.getElementInIndex(i).getQuantity() + "\n";
+                userReport += "- " + missingStock.ProductinIndex(i).getName() + ": " + missingStock.ProductinIndex(i).getAmount() + "\n";
             }
             //report to user
             userReport += "Así que se solicitaron los productos a: " + storageToGiveProducts.getName() + "\n";
@@ -257,9 +257,9 @@ public class InterfaceFunctions {
      */
     public static void createShortestRouteGraph(String route) {
         MultiGraph multiGraph = new MultiGraph("GraphMap");
-        Graph originalGraph = Code.getGraph();
-        AdjMatrixGraph adjMatrix = originalGraph.getAdjMatrix();
-        ListStorage storages = originalGraph.getStorageList();
+        Grafos originalGraph = Code.getGraph();
+        MatrizAdy adjMatrix = originalGraph.getMatrixAdy();
+        List storages = originalGraph.getWarehouses();
         String[] routeSplit = route.split(",");
 
         for (String storage : routeSplit) {
@@ -278,8 +278,8 @@ public class InterfaceFunctions {
         for (int i = 0; i < forAux; i++) {
             String emitter = routeSplit[i];
             String receiver = routeSplit[i + 1];
-            int emitterIndex = storages.getIndexByElement(emitter);
-            int receiverIndex = storages.getIndexByElement(receiver);
+            int emitterIndex = storages.warehouseIndex(emitter);
+            int receiverIndex = storages.warehouseIndex(receiver);
             String routeValue = String.valueOf(adjMatrix.getMatrix()[emitterIndex][receiverIndex]);
             //multiGraph.addEdge(edgeName, storage1, storage2, true);
             String edgeId = emitter + "-" + receiver;
@@ -303,27 +303,27 @@ public class InterfaceFunctions {
      * Gets shortest route using Dijkstra
      *
      *
-     * @param storagesWithStock
-     * @param originalStorage
+     * @param warehousesWithStock
+     * @param originalWarehouse
      * @return string
      */
-    public static String getShortestRoute(ListStorage storagesWithStock, String originalStorage) {
-        ObjectList shortestRoutes = new ObjectList();
-        ListStorage allStorages = Code.getGraph().getStorageList();
-        int[][] adjMatrix = Code.getGraph().getAdjMatrix().getMatrix();
+    public static String getShortestRoute(List warehousesWithStock, String originalWarehouse) {
+        List shortestRoutes = new List();
+        List allWarehouses = Code.getGraph().getWarehouses();
+        int[][] adjMatrix = Code.getGraph().getMatrixAdy().getMatrix();
 //        adjMatrix.printMatrix();
 
-        for (int i = 0; i < storagesWithStock.getLength(); i++) {
-            String currentStorageWithStock = storagesWithStock.getStorageNodeByIndex(i).getStorage().getName();
+        for (int i = 0; i < warehousesWithStock.getSize(); i++) {
+            String currentStorageWithStock = warehousesWithStock.getWarehouseNodebyIndex(i).getData().getId();
 
-            ObjectList visitedNodes = new ObjectList();
+            List visitedNodes = new List();
 //            ObjectList unVisitedNodes = new ObjectList();
 
             Object[][] routesMatrix = new Object[adjMatrix.length][3];
 
             //fill columns [0] storages names, [1] shortest distance, [2] previous node
-            for (int j = 0; j < allStorages.getLength(); j++) {
-                routesMatrix[j][0] = allStorages.getStorageNodeByIndex(j).getStorage().getName();
+            for (int j = 0; j < allWarehouses.getSize(); j++) {
+                routesMatrix[j][0] = allWarehouses.getWarehouseNodebyIndex(j).getData().getId();
                 routesMatrix[j][1] = Integer.MAX_VALUE;
 
 //                unVisitedNodes.addEnd(allStorages.getStorageNodeByIndex(j).getStorage().getName());
@@ -333,20 +333,20 @@ public class InterfaceFunctions {
             }
 
             //Dijkstra
-            while (visitedNodes.getLength() != allStorages.getLength()) {
+            while (visitedNodes.getSize() != allWarehouses.getSize()) {
 
                 //identify the lowest distance unvisited node
                 String lowestUnvisitedNode = "default";
-                for (int j = 0; j < allStorages.getLength(); j++) {
-                    String currentStorageName = allStorages.getStorageNodeByIndex(j).getStorage().getName();
+                for (int j = 0; j < allWarehouses.getSize(); j++) {
+                    String currentStorageName = allWarehouses.getWarehouseNodebyIndex(j).getData().getId();
 
-                    if (!visitedNodes.isObjectInList(currentStorageName)) {
+                    if (!visitedNodes.searchList(currentStorageName)) {
 
                         if (lowestUnvisitedNode.equals("default")) {
                             lowestUnvisitedNode = currentStorageName;
                         } else {
-                            int lowestUnvisitedRow = allStorages.getIndexByElement(lowestUnvisitedNode);
-                            int currentRow = allStorages.getIndexByElement(currentStorageName);
+                            int lowestUnvisitedRow = allWarehouses.warehouseIndex(lowestUnvisitedNode);
+                            int currentRow = allWarehouses.warehouseIndex(currentStorageName);
 
                             int lowestRouteValue = (int) routesMatrix[lowestUnvisitedRow][1];
                             int currentRouteValue = (int) routesMatrix[currentRow][1];
@@ -361,14 +361,14 @@ public class InterfaceFunctions {
                 }
                 // examine unvisited neighbours
 
-                int lowestIUnvisitedIndex = allStorages.getIndexByElement(lowestUnvisitedNode);
+                int lowestIUnvisitedIndex = allWarehouses.warehouseIndex(lowestUnvisitedNode);
 
                 for (int j = 0; j < adjMatrix[lowestIUnvisitedIndex].length; j++) {
                     int currentRoute = adjMatrix[lowestIUnvisitedIndex][j];
                     if (currentRoute != 0) {
                         String currentNeighbour = (String) routesMatrix[j][0];
 
-                        if (!visitedNodes.isObjectInList(currentNeighbour)) {
+                        if (!visitedNodes.searchList(currentNeighbour)) {
                             int newDistance = currentRoute + ((int) routesMatrix[lowestIUnvisitedIndex][1]);
                             int oldDistance = (int) routesMatrix[j][1];
 
@@ -382,13 +382,13 @@ public class InterfaceFunctions {
                     }
                 }
 
-                visitedNodes.addEnd(lowestUnvisitedNode);
+                visitedNodes.addAtTheEnd(lowestUnvisitedNode);
 
             }
             // end of Dijkstra        
 
-            int currentIndex = allStorages.getIndexByElement(originalStorage);
-            String finalRoute = String.valueOf((int) routesMatrix[currentIndex][1]) + ";" + originalStorage + ",";
+            int currentIndex = allWarehouses.warehouseIndex(originalWarehouse);
+            String finalRoute = String.valueOf((int) routesMatrix[currentIndex][1]) + ";" + originalWarehouse + ",";
             boolean isRouteIncomplete = true;
 
             while (isRouteIncomplete) {
@@ -396,11 +396,11 @@ public class InterfaceFunctions {
                     isRouteIncomplete = false;
                 } else {
                     finalRoute += ((String) routesMatrix[currentIndex][2]) + ",";
-                    currentIndex = allStorages.getIndexByElement(routesMatrix[currentIndex][2].toString());
+                    currentIndex = allWarehouses.warehouseIndex(routesMatrix[currentIndex][2].toString());
                 }
             }
 
-            shortestRoutes.addEnd(finalRoute);
+            shortestRoutes.addAtTheEnd(finalRoute);
 
             //print Dijkstra matrix
 //             System.out.println("Ruta sin invertir:" + finalRoute);
@@ -414,13 +414,13 @@ public class InterfaceFunctions {
 //            System.out.println("------\n");
         }
 
-        String lowestRoute = shortestRoutes.getHead().getElement().toString();
-        for (int i = 0; i < shortestRoutes.getLength(); i++) {
-            int currentValue = Integer.parseInt(((String) shortestRoutes.getElementInIndex(i)).split(";")[0]);
+        String lowestRoute = shortestRoutes.getpFirst().getData().toString();
+        for (int i = 0; i < shortestRoutes.getSize(); i++) {
+            int currentValue = Integer.parseInt(((String) shortestRoutes.ElementIndex(i)).split(";")[0]);
             int lowestValue = Integer.parseInt(lowestRoute.split(";")[0]);
 
             if (currentValue < lowestValue) {
-                lowestRoute = (String) shortestRoutes.getElementInIndex(i);
+                lowestRoute = (String) shortestRoutes.ElementIndex(i);
             }
         }
 //        System.out.println("original");
@@ -435,7 +435,7 @@ public class InterfaceFunctions {
 
     /**
      *
-     * Inverts the storage secuence given
+     * Inverts the storage sequence given
      *
      * @param original
      * @return String
@@ -458,19 +458,19 @@ public class InterfaceFunctions {
      * @param nodeStorageList
      * @return String
      */
-    public static String buildStringTotalInv(ObjectList nodeStorageList) {
+    public static String buildStringTotalInv(List nodeWarehouses) {
         String msg = "";
-        ObjectNode pointer = nodeStorageList.getHead();
+        Node pointer = nodeWarehouses.getpFirst();
 
         while (pointer != null) {
-            Storage currentStorage = (Storage) pointer.getElement();
-            msg += currentStorage.getName() + ":\n";
-            ListInv currentInv = currentStorage.getInventory();
+            Warehouse currentWarehouse = (Warehouse) pointer.getData();
+            msg += currentWarehouse.getId() + ":\n";
+            List currentInv = currentWarehouse.getProducts();
 
             if (currentInv != null) {
-                for (int i = 0; i < currentInv.getLength(); i++) {
-                    Product currentProduct = currentInv.getElementInIndex(i);
-                    msg += currentProduct.getName() + ": " + currentProduct.getQuantity() + "\n";
+                for (int i = 0; i < currentInv.getSize(); i++) {
+                    Products currentProduct = currentInv.ProductinIndex(i);
+                    msg += currentProduct.getName() + ": " + currentProduct.getAmount() + "\n";
                 }
             } else {
                 msg += "Sin inventario\n";
@@ -478,7 +478,7 @@ public class InterfaceFunctions {
 
             msg += "\n";
 
-            pointer = pointer.getNext();
+            pointer = pointer.getpNext();
         }
 
         return msg;
@@ -516,7 +516,7 @@ public class InterfaceFunctions {
      * @param array
      * @return boolean
      */
-    public static boolean isAStorage(String[] array) {
+    public static boolean isAWarehouse(String[] array) {
         return array[0].equals("Almacen");
 
     }
@@ -526,9 +526,9 @@ public class InterfaceFunctions {
      * @param name
      * @return boolean
      */
-    public static boolean alreadyExistStorage(String name) {
-        for (int i = 0; i < Code.getGraph().getCounter(); i++) {
-            if (Code.getGraph().getStorageList().getStorageNodeByIndex(i).getStorage().getName().equalsIgnoreCase(name)) {
+    public static boolean alreadyExistWarehouse(String name) {
+        for (int i = 0; i < Code.getGraph().getSize(); i++) {
+            if (Code.getGraph().getWarehouses().getWarehouseNodebyIndex(i).getData().getId().equalsIgnoreCase(name)) {
                 return true;
             }
 
@@ -547,31 +547,31 @@ public class InterfaceFunctions {
      * @param nameArray
      * @param name
      */
-    public static void createStorageButton(String transmitter, String receiver, String receiverCost, String transmitterCost, String[] nameArray, String name) {
+    public static void createWarehouseButton(String transmitter, String receiver, String receiverCost, String transmitterCost, String[] nameArray, String name) {
         if (InterfaceFunctions.areTheSame(transmitter, receiver)) {
             JOptionPane.showMessageDialog(null, "No se puede ingresar el mismo almacén receptor y emisor en las rutas");
         } else {
             if (!InterfaceFunctions.isANumber(transmitterCost) || !InterfaceFunctions.isANumber(receiverCost)) {
                 JOptionPane.showMessageDialog(null, "Debe ingresar las distancias con números");
             } else {
-                if (!InterfaceFunctions.isAStorage(nameArray)) {
+                if (!InterfaceFunctions.isAWarehouse(nameArray)) {
                     JOptionPane.showMessageDialog(null, "El nombre del almacén debe de empezar con 'Almacén'");
 
                 } else {
-                    if (InterfaceFunctions.alreadyExistStorage(name)) {
+                    if (InterfaceFunctions.alreadyExistWarehouse(name)) {
                         JOptionPane.showMessageDialog(null, "Ya existe el almacén");
                     } else {
-                        Code.getGraph().insertNewStorage(name);
-                        Product element = new Product(0, "Placa");
-                        ListInv inventory = new ListInv();
-                        inventory.addHead(element);
+                        Code.getGraph().insertEmptyWarehouse(name);
+                        Products element = new Products( "Placa",0);
+                        List inventory = new List();
+                        inventory.addAtTheStart(element);
 
-                        Code.getGraph().getStorageList().getStorageNodeByIndex(Code.getGraph().getStorageList().getLength() - 1).getStorage().setInventory(inventory);
+                        Code.getGraph().getWarehouses().getWarehouseNodebyIndex(Code.getGraph().getWarehouses().getSize() - 1).getData().setProducts(inventory);
                         //GlobalUI.getGraph().getAdjMatrix().printMatrix();
                         JOptionPane.showMessageDialog(null, "Almacén creado con éxito");
-                        createNewMatrixWithAnother(Code.getGraph().getAdjMatrix(), Code.getGraph().getCounter());
-                        Code.getGraph().getAdjMatrix().addEdge(Code.getGraph().getStorageNumberWithName(transmitter), Code.getGraph().getCounter() - 1, Integer.parseInt(transmitterCost));
-                        Code.getGraph().getAdjMatrix().addEdge(Code.getGraph().getCounter() - 1, Code.getGraph().getStorageNumberWithName(receiver), Integer.parseInt(receiverCost));
+                        createNewMatrixWithAnother(Code.getGraph().getMatrixAdy(), Code.getGraph().getSize());
+                        Code.getGraph().getMatrixAdy().addAnEdge(Code.getGraph().WarehouseName(transmitter), Code.getGraph().getSize() - 1, Integer.parseInt(transmitterCost));
+                        Code.getGraph().getMatrixAdy().addAnEdge(Code.getGraph().getSize() - 1, Code.getGraph().WarehouseName(receiver), Integer.parseInt(receiverCost));
                         //GlobalUI.getGraph().getAdjMatrix().printMatrix();
                         JOptionPane.showMessageDialog(null, "Almacén creado con éxito");
                     }
@@ -587,10 +587,10 @@ public class InterfaceFunctions {
      * @param am
      * @param v
      */
-    public static void createNewMatrixWithAnother(AdjMatrixGraph am, int v) {
-        AdjMatrixGraph newMatrix = new AdjMatrixGraph(v);
-        for (int j = 0; j < am.getNumVertices(); j++) {
-            System.arraycopy(am.getMatrix()[j], 0, newMatrix.getMatrix()[j], 0, am.getNumVertices());
+    public static void createNewMatrixWithAnother(MatrizAdy am, int v) {
+        MatrizAdy newMatrix = new MatrizAdy(v);
+        for (int j = 0; j < am.getNumVertex(); j++) {
+            System.arraycopy(am.getMatrix()[j], 0, newMatrix.getMatrix()[j], 0, am.getNumVertex());
 
         }
 
@@ -603,18 +603,18 @@ public class InterfaceFunctions {
      */
     public static void createGraphMap() {
         MultiGraph multiGraph = new MultiGraph("GraphMap");
-        Graph originalGraph = Code.getGraph();
-        AdjMatrixGraph adjMatrix = originalGraph.getAdjMatrix();
-        ListStorage storages = originalGraph.getStorageList();
+        Grafos originalGraph = Code.getGraph();
+        MatrizAdy adjMatrix = originalGraph.getMatrixAdy();
+        List warehouses = originalGraph.getWarehouses();
 
         //add all Nodes
-        NodeStorage pointer = storages.getHead();
+        Node <Warehouse> pointer = warehouses.getpFirst();
         while (pointer != null) {
-            Node n = multiGraph.addNode(pointer.getStorage().getName());
-            String storageName = pointer.getStorage().getName();
+            Node n = multiGraph.addNode(pointer.getData().getId());
+            String storageName = pointer.getData().getId();
             n.setAttribute("ui.label", storageName + "\n");
 
-            pointer = pointer.getNext();
+            pointer = pointer.getpNext();
         }
 
         for (int i = 0; i < adjMatrix.getMatrix().length; i++) {
@@ -622,8 +622,8 @@ public class InterfaceFunctions {
             for (int j = 0; j < adjMatrix.getMatrix()[i].length; j++) {
 
                 if (adjMatrix.getMatrix()[i][j] != 0) {
-                    String storage1 = storages.getStorageNodeByIndex(i).getStorage().getName();
-                    String storage2 = storages.getStorageNodeByIndex(j).getStorage().getName();
+                    String storage1 = warehouses.getWarehouseNodebyIndex(i).getData().getId();
+                    String storage2 = warehouses.getWarehouseNodebyIndex(j).getData().getId();
                     String edgeName = storage1 + " " + storage2;
                     multiGraph.addEdge(edgeName, storage1, storage2, true);
                     Edge ed = multiGraph.getEdge(edgeName);
@@ -696,7 +696,7 @@ public class InterfaceFunctions {
                 String[] secondArray = arrayAux[i].split(",");
                 int num = Integer.parseInt(secondArray[1]);
                 String storage = secondArray[0];
-                Code.getGraph().getAdjMatrix().addEdge(Code.getGraph().getStorageNumberWithName(from), Code.getGraph().getStorageNumberWithName(storage), num);
+                Code.getGraph().getMatrixAdy().addAnEdge(Code.getGraph().WarehouseName(from), Code.getGraph().WarehouseName(storage), num);
             }
 
         }
@@ -711,13 +711,13 @@ public class InterfaceFunctions {
             if (!arrayAux[i].equalsIgnoreCase("")) {
                 String[] secondArray = arrayAux[i].split(",");
                 int num = Integer.parseInt(secondArray[1]);
-                String storage = secondArray[0];
-                Code.getGraph().getAdjMatrix().addEdge(Code.getGraph().getStorageNumberWithName(storage), Code.getGraph().getStorageNumberWithName(to), num);
+                String warehouse = secondArray[0];
+                Code.getGraph().getMatrixAdy().addAnEdge(Code.getGraph().WarehouseName(warehouse), Code.getGraph().WarehouseName(to), num);
             }
 
         }
 
-        Code.getGraph().getAdjMatrix().printMatrix();
+        Code.getGraph().getMatrixAdy().printMatrix();
     }
 
     /**
@@ -741,7 +741,7 @@ public class InterfaceFunctions {
      */
     public static boolean selectStorageName(String name) {
 
-        if (InterfaceFunctions.alreadyExistStorage(name)) {
+        if (InterfaceFunctions.alreadyExistWarehouse(name)) {
             JOptionPane.showMessageDialog(null, "Ya existe el almacén");
         } else {
             return true;
@@ -758,12 +758,12 @@ public class InterfaceFunctions {
      * @param directionFrom
      */
     public static void createNewStorage(String name, String directionTo, String directionFrom) {
-        Code.getGraph().insertNewStorage(name);
-        Product element = new Product(0, "Placa");
-        ListInv inventory = new ListInv();
-        inventory.addHead(element);
-        Code.getGraph().getStorageList().getStorageNodeByIndex(Code.getGraph().getStorageList().getLength() - 1).getStorage().setInventory(inventory);
-        createNewMatrixWithAnother(Code.getGraph().getAdjMatrix(), Code.getGraph().getCounter());
+        Code.getGraph().insertEmptyWarehouse(name);
+        Products element = new Products( "Placa",0);
+        List inventory = new List();
+        inventory.addAtTheStart(element);
+        Code.getGraph().getWarehouses().getWarehouseNodebyIndex(Code.getGraph().getWarehouses().getSize() - 1).getData().setProducts(inventory);
+        createNewMatrixWithAnother(Code.getGraph().getMatrixAdy(), Code.getGraph().getSize());
         addNewRutesButton(directionTo, name);
         addNewTransmitterRutesButton(directionFrom, name);
 

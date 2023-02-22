@@ -77,7 +77,7 @@ public class Grafos {
     }
 
     // method that returns the warehouse 
-    public Warehouse searchWarehouse(String id) {
+   public Warehouse searchWarehouse(String id) {
 
         Node<Warehouse> aux = new Node<>();
         aux = this.getWarehouses().getpFirst();
@@ -92,7 +92,7 @@ public class Grafos {
         }
         return aux.getData();
 
-    }
+    } 
     
       // method that returns the warehouse index with name/id
     public int WarehouseName(String id){
@@ -109,6 +109,13 @@ public class Grafos {
         }
             return num;
             
+    }
+    
+    //Method that creates an empty warehouse
+    public void insertEmptyWarehouse(String name){
+        Warehouse warehouse = new Warehouse(name);
+        this.warehouses.addAtTheEnd(warehouse);
+        this.size++;
     }
 
     // DFS algorithm, returns lists of all graphs warehouses
