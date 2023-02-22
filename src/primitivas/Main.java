@@ -17,7 +17,7 @@ public class Main {
         Grafos grafo = new Grafos();
         String texto = "";
         Functions f = new Functions();
-        grafo = f.read_txt();
+            grafo = f.read_txt();
         Node<Warehouse> aux = grafo.getWarehouses().getpFirst();
         for (int i = 0; i < grafo.getWarehouses().getSize(); i++) {
             texto += aux.getData().printWarehouse();

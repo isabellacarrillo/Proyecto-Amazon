@@ -30,8 +30,13 @@ public class Functions {
                 texto += "\n" + "Almacen " + auxW.getData().getId() + ":";
                 Node<Products> auxP = auxW.getData().getProducts().getpFirst();
                 for (int j = 0; j < auxW.getData().getProducts().getSize(); j++) {
-                    texto += "\n" + auxP.getData().getName() + "," + String.valueOf(auxP.getData().getAmount());
-                    auxP = auxP.getpNext();
+                    if (j == (auxW.getData().getProducts().getSize()-1)){
+                                                texto += "\n" + auxP.getData().getName() + "," + String.valueOf(auxP.getData().getAmount() + ";");
+                        auxP = auxP.getpNext();
+                    } else {
+                        texto += "\n" + auxP.getData().getName() + "," + String.valueOf(auxP.getData().getAmount());
+                        auxP = auxP.getpNext();
+                    }
                 }
                 auxW = auxW.getpNext();
             }
@@ -42,7 +47,7 @@ public class Functions {
                         char almacenCOrigin = (char) (i + 65);
                         char almacenCDestination = (char) (j + 65);
                         int weight = grafo.getMatrixAdy().getMatrix()[i][j];
-                        texto += "\n" + String.valueOf(almacenCOrigin) + "," + String.valueOf(almacenCDestination) + "," + String.valueOf(weight) ;
+                        texto += "\n" + String.valueOf(almacenCOrigin) + "," + String.valueOf(almacenCDestination) + "," + String.valueOf(weight);
                     }
                 }
             }
@@ -125,7 +130,6 @@ public class Functions {
                                 int origin = (int) routes_singled[0].charAt(0) - valueRef;
                                 int destiny = (int) routes_singled[1].charAt(0) - valueRef;
                                 int weight = Integer.parseInt(routes_singled[2]);
-
 
                                 matrix.addAnEdge(origin, destiny, weight);
 
