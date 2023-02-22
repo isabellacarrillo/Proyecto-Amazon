@@ -65,6 +65,20 @@ public class Grafos {
         return cont;
     }
 
+    //Search for a list of products
+    public List searchListProduct(String name) {
+        Node<Warehouse> aux = this.getWarehouses().getpFirst();
+        for (int i = 0; i < this.getWarehouses().getSize(); i++) {
+            if (aux.getData().getId().equalsIgnoreCase(name)){
+                return aux.getData().getProducts();
+            }
+        }
+        return null;
+    }
+    
+    //No me esta dejando hacer el commit
+        
+
     // Returns a string array with the name of all warehouses 
     public String[] warehousestring() {
         String[] cadena;

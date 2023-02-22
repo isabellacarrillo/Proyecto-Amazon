@@ -42,11 +42,11 @@ public class Warehouse {
          
                 
             
-        }return aux.getData(); 
+        }return null; 
     }
-    
-   
 
+
+    
 
     //Print warehouse with products
     public String printWarehouse() {
