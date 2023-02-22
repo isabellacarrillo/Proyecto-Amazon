@@ -9,37 +9,55 @@ package primitivas;
  *
  * @author Andres
  */
-
-
 public class Warehouse {
+
     private String id;
     private List products;
 
     public Warehouse() {
     }
-    
-    
-    
+
     public Warehouse(String id, List products) {
         this.id = id;
         this.products = products;
     }
-    
+
     public Warehouse(String id) {
         this.id = id;
     }
+
+    //Get product from list
+    public Products searchProduct(String name) {
+        Node<Products> aux = new Node<>();
+        aux = this.getProducts().getpFirst();
+        Products product = null;
+
+        while (aux != null) {
+            if (aux.getData().getName().equalsIgnoreCase(name)){
+                return aux.getData();
+            }else{
+                aux = aux.getpNext();
+            }
+
+         
+                
+            
+        }return aux.getData(); 
+    }
     
+   
+
 
     //Print warehouse with products
-    public String printWarehouse(){
-        String texto = "\nAlamcen: "+ this.getId();
+    public String printWarehouse() {
+        String texto = "\nAlamcen: " + this.getId();
         Node<Products> aux = this.getProducts().getpFirst();
         for (int i = 0; i < this.getProducts().getSize(); i++) {
             texto += aux.getData().printProduct();
         }
         return texto;
     }
-    
+
     /**
      * @return the id
      */
@@ -68,6 +86,4 @@ public class Warehouse {
         this.products = products;
     }
 
-
-    
 }

@@ -118,6 +118,66 @@ public class List { //Class atributes
          }
      }
      
+     // Method to return name of products as an array
+    
+     public String [] productsArray(){
+         String [] array;
+         array = new String[getSize()];
+         for (int i = 0; i < getSize(); i++) {
+             array[i] = ElementIndex(i).toString();
+             
+         }
+         return array;
+     }
+     
+      
+     // Method that will print inventory of products
+     public void printInventory(){
+        Node <Products> aux = getpFirst();
+        if (!isEmpty()){
+            for (int i = 0; i < getSize(); i++) {
+                System.out.println("\nProducto:"+ aux.getData().getName() + "\nCantidad:" + aux.getData().getAmount());
+                aux = aux.getpNext();
+            }
+        }
+    }
+     
+     //Method that will print the name of the products
+     public void printNameProduct(){
+         Node <Products> aux = getpFirst();
+        if (!isEmpty()){
+            for (int i = 0; i < getSize(); i++) {
+                System.out.println(aux.getData().getName());
+                aux = aux.getpNext();
+            }
+        }
+     }
+     
+     public void printProductAmount(){
+        Node <Products> aux = getpFirst();
+        if (!isEmpty()){
+            for (int i = 0; i < getSize(); i++) {
+                System.out.println(aux.getData().getAmount());
+                aux = aux.getpNext();
+            }
+        }
+         
+     }
+     
+     //This will print warehouses
+     public void printWarehouses(){
+         if(!isEmpty()){
+             Node <Warehouse> aux = getpFirst();
+             while(aux != null){
+                 System.out.println(aux.getData().getId());
+                 aux = aux.getpNext();
+             }
+         }else{
+             System.out.println("No elements");
+         }
+     }
+     
+     
     
     
     
