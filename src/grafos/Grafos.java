@@ -62,7 +62,35 @@ public class Grafos {
         return cont;
     }
     
+    // Returns a string array with the name of all warehouses 
+    
+    public String [] warehousestring (){
+        String [] cadena;
+        cadena = new String[size];
+        for (int i = 0; i < size; i++) {
+            cadena[i] = warehouses.getWarehouseNodebyIndex(i).getData().toString();
+            
+        }
+        return cadena;
+    }
   
+    // method that returns the warehouse index with name/id
+    public int WarehouseName(String id){
+            int num = 0;
+            for (int i = 0; i < warehouses.getSize(); i++) {
+                String warehouse = warehouses.getWarehouseNodebyIndex(i).getData().toString();
+                
+                if (warehouse.equalsIgnoreCase(id)){
+                    num = i;
+                    break;
+                    
+                }
+            
+        }
+            return num;
+            
+    }
+    
     
     // DFS algorithm, returns lists of all graphs warehouses
     
