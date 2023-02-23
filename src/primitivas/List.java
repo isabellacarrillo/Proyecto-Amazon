@@ -100,7 +100,7 @@ public class List { //Class atributes
      }
     
      //Method that returns the warehouse node with its index
-     public Node getWarehouseNodebyIndex (int index){
+     public Node<Warehouse> getWarehouseNodebyIndex (int index){
          Node aux = getpFirst();
          for (int i = 0; i < index; i++) {
              aux = aux.getpNext();
@@ -220,7 +220,6 @@ public class List { //Class atributes
              System.out.println("No elements");
          }
      }
-     
      
   
     
