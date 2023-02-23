@@ -1,4 +1,4 @@
-package Interface;
+package Interfaces;
 
 import java.io.File;
 public class cargarArchivo extends javax.swing.JFrame {

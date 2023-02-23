@@ -1,4 +1,4 @@
-package Interface;
+package Interfaces;
 
 
 public class InventaryP extends javax.swing.JFrame {

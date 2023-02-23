@@ -1,6 +1,6 @@
-package Interface;
+package Interfaces;
 import javax.swing.JOptionPane;
-import main.File;
+import primitivas.Functions;
 public class Main extends javax.swing.JFrame {
     public Main() {
         initComponents();

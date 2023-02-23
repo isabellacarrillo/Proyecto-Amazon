@@ -33,20 +33,15 @@ public class Warehouse {
         Products product = null;
 
         while (aux != null) {
-            if (aux.getData().getName().equalsIgnoreCase(name)){
+            if (aux.getData().getName().equalsIgnoreCase(name)) {
                 return aux.getData();
-            }else{
+            } else {
                 aux = aux.getpNext();
             }
 
-         
-                
-            
-        }return null; 
+        }
+        return null;
     }
-
-
-    
 
     //Print warehouse with products
     public String printWarehouse() {
@@ -56,6 +51,18 @@ public class Warehouse {
             texto += aux.getData().printProduct();
         }
         return texto;
+    }
+
+    public Products[] getProductStringArray() {
+        Products[] array;
+        array = new Products[this.getProducts().getSize()];
+        Node<Products> aux = this.getProducts().getpFirst();
+        for (int i = 0; i < this.getProducts().getSize(); i++) {
+            array[i] = aux.getData();
+            aux = aux.getpNext();
+        }
+
+        return array;
     }
 
     /**

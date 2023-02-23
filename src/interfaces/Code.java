@@ -1,4 +1,4 @@
-package Interface;
+package Interfaces;
 
 import grafos.Grafos;
 public class Code {
