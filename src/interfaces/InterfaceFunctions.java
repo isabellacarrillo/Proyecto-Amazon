@@ -14,6 +14,7 @@ import org.graphstream.graph.Edge;
 import org.graphstream.graph.Node;
 import org.graphstream.graph.implementations.MultiGraph;
 import org.graphstream.ui.view.Viewer;
+import primitivas.Functions;
 
 /**
  *
@@ -48,7 +49,7 @@ public class InterfaceFunctions {
         Code.getNewOrderPage().getInvTextField().setText(buildStringTotalInv(warehousesO));
 
         for (String item : warehousesName) {
-            if (warehouses.searchWarehouse(item).getProducts()!= null) {
+            if (graph.searchWarehouse(item).getProducts()!= null) {
                 Code.getNewOrderPage().getStorageComboBox().removeItem(item);
                 Code.getNewOrderPage().getStorageComboBox().addItem(item);
             }
@@ -61,11 +62,11 @@ public class InterfaceFunctions {
      *
      * @param storageName
      */
-    public static void setAvailableProducts(String Name ) {
+    public static void setAvailableProducts(String Name) {
         Code.getNewOrderPage().getProductComboBox().removeAllItems();
 
         Grafos graph = Code.getGraph();
-        Warehouse selectedWarehouse = graph.getWarehouses().searchWarehouse(Name);
+        Warehouse selectedWarehouse = graph.searchWarehouse(Name);
         String[] productsNames = selectedWarehouse.getProducts().productsArray();
 
         for (String item : productsNames) {
@@ -111,23 +112,23 @@ public class InterfaceFunctions {
     public static void completeOrder(String order, String storageName) {
         Grafos graph = Code.getGraph();
         List warehouses = graph.getWarehouses();
-        Warehouse selectedStorage = warehouses.getWarehouse(storageName);
+        Warehouse selectedStorage = graph.searchWarehouse(storageName);
         String[] orderSplit = order.split("\n");
 
         boolean isStockAvailable = true;
-        List missingStock = new List();
+        Warehouse missingStock = new Warehouse();
 
         for (String productString : orderSplit) {
             String[] productAux = productString.split(":");
             String productName = productAux[0];
 
             int productQty = Integer.parseInt(productAux[1].replace(" ", ""));
-            int currentStock = selectedStorage.getProducts().searchProducts(productName).getAmount();
+            int currentStock = selectedStorage.searchProduct(productName).getAmount();
 
             if (currentStock < productQty) {
                 isStockAvailable = false;
                 Products missingProduct = new Products(productName,(productQty - currentStock));
-                missingStock.addAtTheEnd(missingProduct);
+                missingStock.getProducts().addAtTheEnd(missingProduct);
             }
 
         }
@@ -137,8 +138,8 @@ public class InterfaceFunctions {
                 String[] productAux = productString.split(":");
                 String productName = productAux[0];
                 int productQty = Integer.parseInt(productAux[1].replace(" ", ""));
-                int originalQty = selectedStorage.getProducts().searchProducts(productName).getAmount();
-                selectedStorage.getProducts().searchProducts(productName).setAmount(originalQty - productQty);
+                int originalQty = selectedStorage.searchProduct(productName).getAmount();
+                selectedStorage.searchProduct(productName).setAmount(originalQty - productQty);
 
             }
 
@@ -160,15 +161,15 @@ public class InterfaceFunctions {
      * @param missingStock
      * @param selectedStorage
      */
-    public static void changeOriginalStorageInv(String[] orderSplit, List missingStock, Warehouse selectedStorage) {
+    public static void changeOriginalStorageInv(String[] orderSplit, Warehouse missingStock, Warehouse selectedStorage) {
         for (String orderString : orderSplit) {
             String productName = orderString.split(":")[0];
 
-            if (missingStock.searchProducts(productName) != null) {
-                selectedStorage.getProducts().searchProducts(productName).setAmount(0);
+            if (missingStock.searchProduct(productName) != null) {
+                selectedStorage.searchProduct(productName).setAmount(0);
             } else {
                 int qtyToReduce = Integer.parseInt(orderString.split(":")[1].replace(" ", ""));
-                Products productToReduce = selectedStorage.getProducts().searchProducts(productName);
+                Products productToReduce = selectedStorage.searchProduct(productName);
                 productToReduce.setAmount(productToReduce.getAmount() - qtyToReduce);
             }
         }
@@ -184,32 +185,34 @@ public class InterfaceFunctions {
      * @param orderSplit
      * @param selectedStorage
      */
-    public static void askStockInOtherStorage(List missingStock, String originalStorage, String[] orderSplit, Warehouse selectedStorage) {
+    public static void askStockInOtherStorage(Warehouse missingStock, String originalStorage, String[] orderSplit, Warehouse selectedStorage) {
         List storageWithStock = new List();
-        List allWarehouses = Code.getGraph().getWarehouses();
+        Grafos allWarehouses = Code.getGraph();
 
         // get storages that can provide the stock
-        for (int i = 0; i < allWarehouses.getSize(); i++) {
+        for (int i = 0; i < allWarehouses.getWarehouses().getSize(); i++) {
 
-            if (!allWarehouses.getWarehouseNodebyIndex(i).getData().getId().equals(originalStorage)) {
+            if (!allWarehouses.getWarehouses().getWarehouseNodebyIndex(i).getData().getId().equals(originalStorage)) {
                 boolean isStockAvailable = true;
-                List currentInv = allWarehouses.getWarehouseNodebyIndex(i).getData().getProducts();
+                Warehouse currentInv = allWarehouses.getWarehouses().getWarehouseNodebyIndex(i).getData();
 
-                for (int j = 0; j < missingStock.getSize(); j++) {
-                    Products currentMissingProduct = missingStock.ProductinIndex(j);
-                    Products productInStorage = currentInv.searchProducts(currentMissingProduct.getName());
+                Node<Products> currentMissingProduct = missingStock.getProducts().getpFirst();
+                for (int j = 0; j < missingStock.getProducts().getSize(); j++) {
+                    
+                    Products productInStorage = currentInv.searchProduct(currentMissingProduct.getData().getName());
                     if (productInStorage == null) {
                         isStockAvailable = false;
                         break;
-                    } else if (productInStorage.getAmount() < currentMissingProduct.getAmount()) {
+                    } else if (productInStorage.getAmount() < currentMissingProduct.getData().getAmount()) {
                         isStockAvailable = false;
                         break;
                     }
+                    currentMissingProduct = currentMissingProduct.getpNext();
 
                 }
 
                 if (isStockAvailable) {
-                    storageWithStock.addAtTheEnd(allWarehouses.getWarehouseNodebyIndex(i).getData());
+                    storageWithStock.addAtTheEnd(allWarehouses.getWarehouses().getWarehouseNodebyIndex(i).getData());
                 }
             }
 
@@ -225,17 +228,19 @@ public class InterfaceFunctions {
 
             String shortestRoute = getShortestRoute(storageWithStock, originalStorage);
             String[] shortestRouteSplit = shortestRoute.split(";");
-            Storage storageToGiveProducts = allWarehouses.searchWarehouse(shortestRouteSplit[1].split(",")[0]);
+            Warehouse storageToGiveProducts = allWarehouses.searchWarehouse(shortestRouteSplit[1].split(",")[0]);
             String userReport = "El pedido tiene los siguientes productos faltantes de stock:\n";
 
-            for (int i = 0; i < missingStock.getSize(); i++) {
-                Products productToReduce = storageToGiveProducts.getProducts().searchProducts(missingStock.ProductinIndex(i).getName());
-                productToReduce.setAmount(productToReduce.getAmount() - missingStock.ProductinIndex(i).getAmount());
+            Node<Products> productosMissingStock = missingStock.getProducts().getpFirst();
+            for (int i = 0; i < missingStock.getProducts().getSize(); i++) {
+                Products productToReduce = storageToGiveProducts.searchProduct(productosMissingStock.getData().getName());
+                productToReduce.setAmount(productToReduce.getAmount() - productosMissingStock.getData().getAmount());
 
-                userReport += "- " + missingStock.ProductinIndex(i).getName() + ": " + missingStock.ProductinIndex(i).getAmount() + "\n";
+                userReport += "- " + productosMissingStock.getData().getName() + ": " + productosMissingStock.getData().getAmount() + "\n";
+                productosMissingStock = productosMissingStock.getpNext();
             }
             //report to user
-            userReport += "Así que se solicitaron los productos a: " + storageToGiveProducts.getName() + "\n";
+            userReport += "Así que se solicitaron los productos a: " + storageToGiveProducts.getId() + "\n";
             userReport += "Siguiendo la ruta más corta " + "(" + shortestRouteSplit[0] + "Km)" + ": ";
             userReport += shortestRouteSplit[1].replace(",", " --> ");
 
@@ -249,6 +254,8 @@ public class InterfaceFunctions {
 
     }
 
+    //No se esta guardando
+    
     /**
      *
      * Creates and show the shortest route corresponding graph
@@ -668,13 +675,13 @@ public class InterfaceFunctions {
      * @param message
      */
     public static void saveCurrentData(String message) {
-        main.File f = new main.File();
+        Functions f = new Functions();
         int resp = JOptionPane.showConfirmDialog(null, message, "Cofirmación", JOptionPane.YES_NO_OPTION);
 
         if (resp == 0) {
 
             try {
-                f.writeFile(Code.getGraph(), Code.getDirection());
+                f.write_txt(Code.getGraph()); //Code.getDirection()
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Hubo un error guardando la información");
             }
