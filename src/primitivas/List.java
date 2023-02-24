@@ -144,17 +144,6 @@ public class List { //Class atributes
          }
      }
      
-     // Method to return name of products as an array
-    
-     public String [] productsArray(){
-         String [] array;
-         array = new String[getSize()];
-         for (int i = 0; i < getSize(); i++) {
-             array[i] = ElementIndex(i).toString();
-             
-         }
-         return array;
-     }
      
      // method that will get the product in index
      

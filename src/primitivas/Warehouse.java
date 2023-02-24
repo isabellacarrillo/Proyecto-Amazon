@@ -53,6 +53,7 @@ public class Warehouse {
         return texto;
     }
 
+        //Product Product array
     public Products[] getProductStringArray() {
         Products[] array;
         array = new Products[this.getProducts().getSize()];
@@ -65,6 +66,18 @@ public class Warehouse {
         return array;
     }
 
+    //Product String array
+        public String[] getProductStringStringArray() {
+        String[] array;
+        array = new String[this.getProducts().getSize()];
+        Node<Products> aux = this.getProducts().getpFirst();
+        for (int i = 0; i < this.getProducts().getSize(); i++) {
+            array[i] = aux.getData().getName();
+            aux = aux.getpNext();
+        }
+
+        return array;
+    }
     /**
      * @return the id
      */

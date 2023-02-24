@@ -1,6 +1,8 @@
-package Interfaces;
+
+package interfaces;
 
 import java.io.File;
+
 public class cargarArchivo extends javax.swing.JFrame {
 
     /**
@@ -112,6 +114,8 @@ public class cargarArchivo extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(cargarArchivo.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 

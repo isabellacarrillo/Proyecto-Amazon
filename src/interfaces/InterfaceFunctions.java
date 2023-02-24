@@ -1,25 +1,21 @@
-package Interfaces;
+package interfaces;
 
 import java.io.File;
-import java.util.Arrays;
 import javax.swing.JOptionPane;
 import grafos.MatrizAdy;
-//import main.Application;
+import primitivas.Main;
 import grafos.Grafos;
 import primitivas.List;
 import primitivas.Node;
 import primitivas.Products;
 import primitivas.Warehouse;
-import org.graphstream.graph.Edge;
-import org.graphstream.graph.Node;
-import org.graphstream.graph.implementations.MultiGraph;
-import org.graphstream.ui.view.Viewer;
+import primitivas.Main;
 import primitivas.Functions;
+//import org.graphstream.graph.*;
+//import org.graphstream.graph.implementations.MultiGraph;
+//import org.graphstream.ui.view.Viewer;
 
-/**
- *
- * @author isaac
- */
+
 public class InterfaceFunctions {
 
     /**
@@ -67,7 +63,7 @@ public class InterfaceFunctions {
 
         Grafos graph = Code.getGraph();
         Warehouse selectedWarehouse = graph.searchWarehouse(Name);
-        String[] productsNames = selectedWarehouse.getProducts().productsArray();
+        String[] productsNames = selectedWarehouse.getProductStringStringArray();
 
         for (String item : productsNames) {
             Code.getNewOrderPage().getProductComboBox().addItem(item);
@@ -88,7 +84,7 @@ public class InterfaceFunctions {
             currentOrder += product + ": " + qtyString + "\n";
             Code.getNewOrderPage().getOrderTextArea().setText(currentOrder);
         } else {
-            JOptionPane.showMessageDialog(null, "Número de cantidad inválido, por favor intente de nuevo");
+            JOptionPane.showMessageDialog(null, "N�mero de cantidad inv�lido, por favor intente de nuevo");
         }
     }
 
@@ -143,7 +139,7 @@ public class InterfaceFunctions {
 
             }
 
-            JOptionPane.showMessageDialog(null, "Pedido agregado con éxito");
+            JOptionPane.showMessageDialog(null, "Pedido agregado con �xito");
             initNewOrderPage();
             resetOrder();
 
@@ -240,12 +236,12 @@ public class InterfaceFunctions {
                 productosMissingStock = productosMissingStock.getpNext();
             }
             //report to user
-            userReport += "Así que se solicitaron los productos a: " + storageToGiveProducts.getId() + "\n";
-            userReport += "Siguiendo la ruta más corta " + "(" + shortestRouteSplit[0] + "Km)" + ": ";
+            userReport += "As� que se solicitaron los productos a: " + storageToGiveProducts.getId() + "\n";
+            userReport += "Siguiendo la ruta m�s corta " + "(" + shortestRouteSplit[0] + "Km)" + ": ";
             userReport += shortestRouteSplit[1].replace(",", " --> ");
 
             JOptionPane.showMessageDialog(null, userReport);
-            createShortestRouteGraph(shortestRouteSplit[1]);
+//            createShortestRouteGraph(shortestRouteSplit[1]);
 
             initNewOrderPage();
             resetOrder();
@@ -262,48 +258,48 @@ public class InterfaceFunctions {
      *
      * @param route
      */
-    public static void createShortestRouteGraph(String route) {
-        MultiGraph multiGraph = new MultiGraph("GraphMap");
-        Grafos originalGraph = Code.getGraph();
-        MatrizAdy adjMatrix = originalGraph.getMatrixAdy();
-        List storages = originalGraph.getWarehouses();
-        String[] routeSplit = route.split(",");
-
-        for (String storage : routeSplit) {
-            System.out.println(storage);
-            Node n = multiGraph.addNode(storage);
-            n.setAttribute("ui.label", storage);
-        }
-
-        int forAux;
-        if (routeSplit.length <= 2) {
-            forAux = 1;
-        } else {
-            forAux = routeSplit.length - 1;
-        }
-
-        for (int i = 0; i < forAux; i++) {
-            String emitter = routeSplit[i];
-            String receiver = routeSplit[i + 1];
-            int emitterIndex = storages.warehouseIndex(emitter);
-            int receiverIndex = storages.warehouseIndex(receiver);
-            String routeValue = String.valueOf(adjMatrix.getMatrix()[emitterIndex][receiverIndex]);
-            //multiGraph.addEdge(edgeName, storage1, storage2, true);
-            String edgeId = emitter + "-" + receiver;
-            Edge ed = multiGraph.addEdge(edgeId, emitter, receiver, true);
-
-            ed.setAttribute("ui.label", routeValue);
-
-        }
-
-        String graphCss = "node { text-offset: 0px, -10px; size: 20px; text-size: 12; fill-color: blue, aquamarine; fill-mode: gradient-horizontal; text-alignment: above; text-color: #222; text-background-mode: plain; text-background-color: white; } edge { size: 2px; fill-color: #444; text-alignment: above; text-size: 20; arrow-size: 12; text-color: blue; text-offset: 10px, -20px;}";
-        multiGraph.setAttribute("ui.stylesheet", graphCss);
-
-        System.setProperty("org.graphstream.ui", "swing");
-
-        Viewer viewer = multiGraph.display();
-        viewer.setCloseFramePolicy(Viewer.CloseFramePolicy.HIDE_ONLY);
-    }
+//    public static void createShortestRouteGraph(String route) {
+//        MultiGraph multiGraph = new MultiGraph("GraphMap");
+//        Grafos originalGraph = Code.getGraph();
+//        MatrizAdy adjMatrix = originalGraph.getMatrixAdy();
+//        List storages = originalGraph.getWarehouses();
+//        String[] routeSplit = route.split(",");
+//
+//        for (String storage : routeSplit) {
+//            System.out.println(storage);
+//            Node n = (Node) multiGraph.addNode(storage);
+//            n.setAttribute("ui.label", storage);
+//        }
+//
+//        int forAux;
+//        if (routeSplit.length <= 2) {
+//            forAux = 1;
+//        } else {
+//            forAux = routeSplit.length - 1;
+//        }
+//
+//        for (int i = 0; i < forAux; i++) {
+//            String emitter = routeSplit[i];
+//            String receiver = routeSplit[i + 1];
+//            int emitterIndex = storages.warehouseIndex(emitter);
+//            int receiverIndex = storages.warehouseIndex(receiver);
+//            String routeValue = String.valueOf(adjMatrix.getMatrix()[emitterIndex][receiverIndex]);
+//            //multiGraph.addEdge(edgeName, storage1, storage2, true);
+//            String edgeId = emitter + "-" + receiver;
+//            Edge ed = multiGraph.addEdge(edgeId, emitter, receiver, true);
+//
+//            ed.setAttribute("ui.label", routeValue);
+//
+//        }
+//
+//        String graphCss = "node { text-offset: 0px, -10px; size: 20px; text-size: 12; fill-color: blue, aquamarine; fill-mode: gradient-horizontal; text-alignment: above; text-color: #222; text-background-mode: plain; text-background-color: white; } edge { size: 2px; fill-color: #444; text-alignment: above; text-size: 20; arrow-size: 12; text-color: blue; text-offset: 10px, -20px;}";
+//        multiGraph.setAttribute("ui.stylesheet", graphCss);
+//
+//        System.setProperty("org.graphstream.ui", "swing");
+//
+//        Viewer viewer = multiGraph.display();
+//        viewer.setCloseFramePolicy(Viewer.CloseFramePolicy.HIDE_ONLY);
+//    }
 
     /**
      *
@@ -556,17 +552,17 @@ public class InterfaceFunctions {
      */
     public static void createWarehouseButton(String transmitter, String receiver, String receiverCost, String transmitterCost, String[] nameArray, String name) {
         if (InterfaceFunctions.areTheSame(transmitter, receiver)) {
-            JOptionPane.showMessageDialog(null, "No se puede ingresar el mismo almacén receptor y emisor en las rutas");
+            JOptionPane.showMessageDialog(null, "No se puede ingresar el mismo almac�n receptor y emisor en las rutas");
         } else {
             if (!InterfaceFunctions.isANumber(transmitterCost) || !InterfaceFunctions.isANumber(receiverCost)) {
-                JOptionPane.showMessageDialog(null, "Debe ingresar las distancias con números");
+                JOptionPane.showMessageDialog(null, "Debe ingresar las distancias con n�meros");
             } else {
                 if (!InterfaceFunctions.isAWarehouse(nameArray)) {
-                    JOptionPane.showMessageDialog(null, "El nombre del almacén debe de empezar con 'Almacén'");
+                    JOptionPane.showMessageDialog(null, "El nombre del almac�n debe de empezar con 'Almac�n'");
 
                 } else {
                     if (InterfaceFunctions.alreadyExistWarehouse(name)) {
-                        JOptionPane.showMessageDialog(null, "Ya existe el almacén");
+                        JOptionPane.showMessageDialog(null, "Ya existe el almac�n");
                     } else {
                         Code.getGraph().insertEmptyWarehouse(name);
                         Products element = new Products( "Placa",0);
@@ -575,12 +571,12 @@ public class InterfaceFunctions {
 
                         Code.getGraph().getWarehouses().getWarehouseNodebyIndex(Code.getGraph().getWarehouses().getSize() - 1).getData().setProducts(inventory);
                         //GlobalUI.getGraph().getAdjMatrix().printMatrix();
-                        JOptionPane.showMessageDialog(null, "Almacén creado con éxito");
+                        JOptionPane.showMessageDialog(null, "Almac�n creado con �xito");
                         createNewMatrixWithAnother(Code.getGraph().getMatrixAdy(), Code.getGraph().getSize());
                         Code.getGraph().getMatrixAdy().addAnEdge(Code.getGraph().WarehouseName(transmitter), Code.getGraph().getSize() - 1, Integer.parseInt(transmitterCost));
                         Code.getGraph().getMatrixAdy().addAnEdge(Code.getGraph().getSize() - 1, Code.getGraph().WarehouseName(receiver), Integer.parseInt(receiverCost));
                         //GlobalUI.getGraph().getAdjMatrix().printMatrix();
-                        JOptionPane.showMessageDialog(null, "Almacén creado con éxito");
+                        JOptionPane.showMessageDialog(null, "Almac�n creado con �xito");
                     }
                 }
             }
@@ -608,46 +604,46 @@ public class InterfaceFunctions {
     /**
      * Create a library graph and shows it to the user
      */
-    public static void createGraphMap() {
-        MultiGraph multiGraph = new MultiGraph("GraphMap");
-        Grafos originalGraph = Code.getGraph();
-        MatrizAdy adjMatrix = originalGraph.getMatrixAdy();
-        List warehouses = originalGraph.getWarehouses();
-
-        //add all Nodes
-        Node <Warehouse> pointer = warehouses.getpFirst();
-        while (pointer != null) {
-            Node n = multiGraph.addNode(pointer.getData().getId());
-            String storageName = pointer.getData().getId();
-            n.setAttribute("ui.label", storageName + "\n");
-
-            pointer = pointer.getpNext();
-        }
-
-        for (int i = 0; i < adjMatrix.getMatrix().length; i++) {
-
-            for (int j = 0; j < adjMatrix.getMatrix()[i].length; j++) {
-
-                if (adjMatrix.getMatrix()[i][j] != 0) {
-                    String storage1 = warehouses.getWarehouseNodebyIndex(i).getData().getId();
-                    String storage2 = warehouses.getWarehouseNodebyIndex(j).getData().getId();
-                    String edgeName = storage1 + " " + storage2;
-                    multiGraph.addEdge(edgeName, storage1, storage2, true);
-                    Edge ed = multiGraph.getEdge(edgeName);
-                    ed.setAttribute("ui.label", adjMatrix.getMatrix()[i][j]);
-                }
-
-            }
-        }
-
-        String graphCss = "node { text-offset: 0px, -10px; size: 20px; text-size: 12; fill-color: blue, aquamarine; fill-mode: gradient-horizontal; text-alignment: above; text-color: #222; text-background-mode: plain; text-background-color: white; } edge { size: 2px; fill-color: #444; text-alignment: above; text-size: 20; arrow-size: 12; text-color: blue; text-offset: 10px, -20px;}";
-        multiGraph.setAttribute("ui.stylesheet", graphCss);
-
-        System.setProperty("org.graphstream.ui", "swing");
-
-        Viewer viewer = multiGraph.display();
-        viewer.setCloseFramePolicy(Viewer.CloseFramePolicy.HIDE_ONLY);
-    }
+//    public static void createGraphMap() {
+//        MultiGraph multiGraph = new MultiGraph("GraphMap");
+//        Grafos originalGraph = Code.getGraph();
+//        MatrizAdy adjMatrix = originalGraph.getMatrixAdy();
+//        List warehouses = originalGraph.getWarehouses();
+//
+//        //add all Nodes
+//        Node <Warehouse> pointer = warehouses.getpFirst();
+//        while (pointer != null) {
+//            Node n = (Node) multiGraph.addNode(pointer.getData().getId());
+//            String storageName = pointer.getData().getId();
+//            n.setAttribute("ui.label", storageName + "\n");
+//
+//            pointer = pointer.getpNext();
+//        }
+//
+//        for (int i = 0; i < adjMatrix.getMatrix().length; i++) {
+//
+//            for (int j = 0; j < adjMatrix.getMatrix()[i].length; j++) {
+//
+//                if (adjMatrix.getMatrix()[i][j] != 0) {
+//                    String storage1 = warehouses.getWarehouseNodebyIndex(i).getData().getId();
+//                    String storage2 = warehouses.getWarehouseNodebyIndex(j).getData().getId();
+//                    String edgeName = storage1 + " " + storage2;
+//                    multiGraph.addEdge(edgeName, storage1, storage2, true);
+//                    Edge ed = multiGraph.getEdge(edgeName);
+//                    ed.setAttribute("ui.label", adjMatrix.getMatrix()[i][j]);
+//                }
+//
+//            }
+//        }
+//
+//        String graphCss = "node { text-offset: 0px, -10px; size: 20px; text-size: 12; fill-color: blue, aquamarine; fill-mode: gradient-horizontal; text-alignment: above; text-color: #222; text-background-mode: plain; text-background-color: white; } edge { size: 2px; fill-color: #444; text-alignment: above; text-size: 20; arrow-size: 12; text-color: blue; text-offset: 10px, -20px;}";
+//        multiGraph.setAttribute("ui.stylesheet", graphCss);
+//
+//        System.setProperty("org.graphstream.ui", "swing");
+//
+//        Viewer viewer = multiGraph.display();
+//        viewer.setCloseFramePolicy(Viewer.CloseFramePolicy.HIDE_ONLY);
+//    }
 
     /**
      * Checks if file is txt, if so ask the user confirmation and change the
@@ -658,10 +654,10 @@ public class InterfaceFunctions {
     public static void uploadTxt(File file) {
         if (file.getAbsolutePath().endsWith(".txt")) {
 
-            int option = JOptionPane.showConfirmDialog(null, "Esta seguro que desea usar el archivo: " + file.getName(), "Confimción", JOptionPane.YES_NO_OPTION);
+            int option = JOptionPane.showConfirmDialog(null, "Esta seguro que desea usar el archivo: " + file.getName(), "Confimci�n", JOptionPane.YES_NO_OPTION);
 
             if (option == 0) {
-                Application.initializeAppWithNewInfo(file.getAbsolutePath());
+                Main.initializeAppWithNewInfo(file.getAbsolutePath());
             }
 
         } else {
@@ -676,14 +672,14 @@ public class InterfaceFunctions {
      */
     public static void saveCurrentData(String message) {
         Functions f = new Functions();
-        int resp = JOptionPane.showConfirmDialog(null, message, "Cofirmación", JOptionPane.YES_NO_OPTION);
+        int resp = JOptionPane.showConfirmDialog(null, message, "Cofirmaci�n", JOptionPane.YES_NO_OPTION);
 
         if (resp == 0) {
 
             try {
                 f.write_txt(Code.getGraph()); //Code.getDirection()
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "Hubo un error guardando la información");
+                JOptionPane.showMessageDialog(null, "Hubo un error guardando la informaci�n");
             }
 
         }
@@ -749,7 +745,7 @@ public class InterfaceFunctions {
     public static boolean selectStorageName(String name) {
 
         if (InterfaceFunctions.alreadyExistWarehouse(name)) {
-            JOptionPane.showMessageDialog(null, "Ya existe el almacén");
+            JOptionPane.showMessageDialog(null, "Ya existe el almac�n");
         } else {
             return true;
         }

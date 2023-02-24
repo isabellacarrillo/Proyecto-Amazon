@@ -1,6 +1,4 @@
-package Interfaces;
-import javax.swing.JOptionPane;
-import primitivas.Functions;
+package interfaces;
 public class Main extends javax.swing.JFrame {
     public Main() {
         initComponents();
@@ -376,7 +374,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_newOrderButtonActionPerformed
 
     private void uploadDataButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadDataButtonActionPerformed
-        InterfaceFunctions.saveCurrentData("Antes de subir un nuevo archivo: ¿Desea guardar la información actual?; de no hacerlo se puede perder");
+        InterfaceFunctions.saveCurrentData("¿Desea guardar la información actual?");
         Code.openUploadDataPage();
     }//GEN-LAST:event_uploadDataButtonActionPerformed
 
@@ -386,7 +384,7 @@ public class Main extends javax.swing.JFrame {
     }//GEN-LAST:event_invReportButtonActionPerformed
 
     private void storageMapButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_storageMapButtonActionPerformed
-        Code.showGraphMap();
+////        Code.showGraphMap();
     }//GEN-LAST:event_storageMapButtonActionPerformed
 
     private void addNewRutesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNewRutesButtonActionPerformed
@@ -418,6 +416,8 @@ public class Main extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 

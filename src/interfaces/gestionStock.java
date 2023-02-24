@@ -1,8 +1,10 @@
-package Interfaces;
+
+package interfaces;
 
 import javax.swing.JOptionPane;
 import grafos.Grafos;
 import primitivas.Products;
+import primitivas.Node;
 
 public class gestionStock extends javax.swing.JFrame {
 
@@ -59,7 +61,6 @@ public class gestionStock extends javax.swing.JFrame {
     public void fillProductsCombo() {
         productChooserCombo1.removeAllItems();
         inv = g1.searchWarehouse(storage).getProductStringArray();
-//        inv = g1.getStorageList().getStorageByName(storage).getInventory().getProductStringArray();
         for (int i = 0; i < inv.length; i++) {
             productChooserCombo1.addItem(inv[i].getName());
 
@@ -387,7 +388,6 @@ public class gestionStock extends javax.swing.JFrame {
     private void selectProductButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectProductButtonActionPerformed
         product = productChooserCombo1.getSelectedItem().toString();
         quantity = g1.searchWarehouse(storage).searchProduct(product).getAmount();
-//        quantity = g1.getStorageList().getStorageByName(storage).getInventory().getProductByName(product).getQuantity();
         actualQuantityLabel.setText(String.valueOf(quantity));
         newQuantityLabel.setText(String.valueOf(quantity));
         newProductNameTextField.setEnabled(false);
@@ -425,8 +425,7 @@ public class gestionStock extends javax.swing.JFrame {
 
     private void addQuantityButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addQuantityButtonActionPerformed
         
-        g1.searchWarehouse(storage).searchProduct(product).setAmount(quantity);
-//        g1.getStorageList().getStorageByName(storage).getInventory().getProductByName(product).setQuantity(quantity);
+       g1.searchWarehouse(storage).searchProduct(product).getAmount();
         Code.setGraph(g1);
         defaultValues();
 
@@ -499,9 +498,9 @@ public class gestionStock extends javax.swing.JFrame {
     }//GEN-LAST:event_deleteButton1ActionPerformed
 
     private void addQuantityNewProductButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addQuantityNewProductButtonActionPerformed
-        Products productAux = new Products(product,quantity);
-        g1.searchWarehouse(storage).getProducts().addAtTheEnd(productAux);
-//        g1.getStorageList().getStorageByName(storage).getInventory().addNewProductWithQuantity(product, quantity);
+        Products newProducts = new Products(product,quantity);
+        Node<Products> newProductN = new Node<>(newProducts);
+        g1.searchWarehouse(storage).getProducts().addAtTheEnd(newProductN);
         Code.setGraph(g1);
         defaultValues();
     }//GEN-LAST:event_addQuantityNewProductButtonActionPerformed
@@ -543,6 +542,8 @@ public class gestionStock extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(gestionStock.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
 

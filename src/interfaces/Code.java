@@ -1,4 +1,4 @@
-package Interfaces;
+package interfaces;
 
 import grafos.Grafos;
 public class Code {
@@ -94,9 +94,9 @@ public class Code {
     /**
      * Shows the graphic for the main graph
      */
-    public static void showGraphMap() {
-        InterfaceFunctions.createGraphMap();
-    }
+////    public static void showGraphMap() {
+////        InterfaceFunctions.createGraphMap();
+////    }
 
     /**
      *

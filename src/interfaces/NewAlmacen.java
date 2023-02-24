@@ -1,4 +1,5 @@
-package Interfaces;
+
+package interfaces;
 
 import javax.swing.JOptionPane;
 import grafos.Grafos;
@@ -546,6 +547,10 @@ public class NewAlmacen extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(NewAlmacen.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
         //</editor-fold>
         //</editor-fold>
         //</editor-fold>
