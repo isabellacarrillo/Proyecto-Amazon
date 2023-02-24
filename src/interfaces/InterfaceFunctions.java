@@ -3,13 +3,11 @@ package interfaces;
 import java.io.File;
 import javax.swing.JOptionPane;
 import grafos.MatrizAdy;
-import primitivas.Main;
 import grafos.Grafos;
 import primitivas.List;
 import primitivas.Node;
 import primitivas.Products;
 import primitivas.Warehouse;
-//import primitivas.Main;
 import primitivas.Functions;
 //import org.graphstream.graph.*;
 //import org.graphstream.graph.implementations.MultiGraph;
@@ -659,7 +657,8 @@ public class InterfaceFunctions {
             int option = JOptionPane.showConfirmDialog(null, "Esta seguro que desea usar el archivo: " + file.getName(), "Confimci�n", JOptionPane.YES_NO_OPTION);
 
             if (option == 0) {
-                Main.initializeAppWithNewInfo(file.getAbsolutePath());
+                Functions f = new Functions();
+                f.read_txt(file);
             }
 
         } else {

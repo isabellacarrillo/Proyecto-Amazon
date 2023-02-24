@@ -65,14 +65,12 @@ public class Functions {
 
     }
 
-    public Grafos read_txt() {
+    public Grafos read_txt(File file) {
 
         List warehouseList = new List();
         List products = new List();
         String line = "";
         String txt = "";
-        String path = "test\\amazon.txt";
-        File file = new File(path);
         Grafos grafo = new Grafos();
 
         try {
